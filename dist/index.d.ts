@@ -1,11 +1,62 @@
+/**
+ * Auth
+ *
+ * The class for authorization into the backend.
+ */
 declare class Auth {
     private static routeLogin;
     private static routeRegister;
     private static routeForgotPassword;
     private static routeLoginToOrganizer;
     private static routeRegisterToOrganizer;
+    /**
+     * Attempts to the log the user in, which will return their data and auth token
+     *
+     * @see [Authorization  Login - BingeWave](https://developers.bingewave.com/docs/auth#login)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static login(data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Attempts to register the user and will return their information along with an auth token.
+     *
+     * @see [Authorization Register - BingeWave](https://developers.bingewave.com/docs/auth#register)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static register(data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Attempts to login a user to an account that will be associated with an organizer. The organizer's auth token is required, and the JWT return will only work for resources associated with that organizer account.
+     *
+     * @see [Authorization Login To Organizer - BingeWave](https://developers.bingewave.com/docs/auth#logintoorganizer)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
+    static loginToOrganizer(data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Attempts to register a user that will be associated with an organizer account. The organizer's auth token is required, and the JWT return will only work for resources associated with that organizer account.
+     *
+     * @see [Authorization Register To Organizer - BingeWave](https://developers.bingewave.com/docs/auth#registertoorganizer)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
+    static registerToOrganizer(data: object, query?: object | null, options?: object | null): Promise<any>;
 }
 
 declare class Accounts {
@@ -20,17 +71,129 @@ declare class Accounts {
     private static routeRemoveSecurePreference;
     private static routeSetProfileImage;
     private static routeSetAvatarImage;
+    /**
+     * Retrieve the profile related to a user by their ID.
+     *
+     * @see [Accounts Profile - BingeWave](https://developers.bingewave.com/docs/accounts#profile)
+     *
+     * @param user_id The id of the user whose profile you want to retrieve
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static getProfile(user_id: string, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Retrives a list of accounts that is associated with an organizer's account. The auth token used
+     * must be related to the organizer account.
+     *
+     * @see [Accounts List - BingeWave](https://developers.bingewave.com/docs/accounts#list)
+     *
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static getAccounts(query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * For users that have either RSVPed or purchased tickets to an event, this will list their tickets.
+     *
+     * @see [Accounts My Tickets - BingeWave](https://developers.bingewave.com/docs/accounts#mytickets)
+     *
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static getMyTickets(query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Retrieves the current users account based the auth token being used.
+     *
+     * @see [Accounts Me - BingeWave](https://developers.bingewave.com/docs/accounts#me)
+     *
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static getMe(query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Upate a users account based on the users auth token. Only a user is able to update thier own account.
+     *
+     * @see [Accounts Update Account - BingeWave](https://developers.bingewave.com/docs/accounts#update)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static updateAccount(data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Sets preference item for a user. Items are stored in a key-value pair.
+     *
+     * @see [Accounts Set Prefrence - BingeWave](https://developers.bingewave.com/docs/accounts#setpreference)
+     *
+     * @param user_id The id of the user
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static setPreference(user_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Removes a preference key-value pair that has been set for the user.
+     *
+     * @see [Accounts Remove Preference - BingeWave](https://developers.bingewave.com/docs/accounts#removepreference)
+     *
+     * @param user_id The id of the user.
+     * @param key The key to remove, which will remove the entire preference.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static removePreference(user_id: string, key: string, data?: object | null | undefined, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Sets a secure preference item for a user. in which items are stored in a key-value pair. Secure preferences
+     * cannot be read by others, and only the current user is able to access this preference. Store sensitive information
+     * such as tokens in this field.
+     *
+     * @see [Accounts Set Secure Prefrence - BingeWave](https://developers.bingewave.com/docs/accounts#setsecurepreference)
+     *
+     * @param user_id The id of the user
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static setSecurePreference(user_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Removes a secure preference key-value pair that has been set for the user. With a secure preference, only
+     * the current user is able to access and remove the preference.
+     *
+     * @see [Accounts Remove Secure Preference - BingeWave](https://developers.bingewave.com/docs/accounts#removesecurepreference)
+     *
+     * @param user_id The id of the user.
+     * @param key The key to remove, which will remove the entire preference.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static removeSecurePreference(user_id: string, key: string, data?: object | null | undefined, query?: object | null, options?: object | null): Promise<any>;
 }
 
+/**
+ * Live Events
+ *
+ * All video conferencing, audio conferencing, live streams and broadcasts are considered live events. Every live event
+ * can be managed via the API. Use the API routes for managing live events.
+ */
 declare class Events {
     private static routeDisconnectUser;
     private static routeConnectUser;
@@ -97,12 +260,93 @@ declare class Events {
     private static routeSetPersonalLayout;
     private static routeChangeVideoDevice;
     private static routeChangeAudioDevice;
+    /**
+     * Creates a live event. All video conferencing, audio conferencing, live streams and brodcasts are considered live events.
+     *
+     * @see [Live Events - Create](https://developers.bingewave.com/docs/events#create)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static createEvent(data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * View a single live event's data.
+     *
+     * @see [Live Events - Create](https://developers.bingewave.com/docs/events#view)
+     *
+     * @param event_id The id of the live event
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static viewEvent(event_id: string, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * List multiple live events that is associated with an organizer's account. Use the pagination to change
+     * what data is returned.
+     *
+     * @see [Live Events - View Single](https://developers.bingewave.com/docs/events#list)
+     *
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static getEvents(query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Update a live event's information.
+     *
+     * @see [Live Events - Update](https://developers.bingewave.com/docs/events#update)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static updateEvent(event_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Update the design elements associated with a live event.
+     *
+     * @see [Live Events - Update Design](https://developers.bingewave.com/docs/events#design)
+     *
+     * @param event_id The id of the live event
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static updateEventDesign(event_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Delete a live event so that it is no longer accessible.
+     *
+     * @see [Live Events - Delete](https://developers.bingewave.com/docs/events#delete)
+     *
+     * @param event_id The id of the live event.
+     * @param event_id The id of the live event
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static deleteEvent(event_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Retrieve a list of chat messages associated with the live event.
+     *
+     * @see [Live Events - Delete](https://developers.bingewave.com/docs/chats#list)
+     *
+     * @param event_id The id of the live event.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static getChatMessages(event_id: string, query?: object | null, options?: object | null): Promise<any>;
     static getSingleChatMessage(event_id: string, message_id: string, query?: object | null, options?: object | null): Promise<any>;
     static sendChatMessage(event_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
@@ -129,7 +373,7 @@ declare class Events {
     static updateGroup(event_id: string, group_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
     static listGroup(event_id: string, group_id: string, query?: object | null, options?: object | null): Promise<any>;
     static viewGroup(event_id: string, group_id: string, query?: object | null, options?: object | null): Promise<any>;
-    static deleteGroup(event_id: string, group_id: string, data: object, query?: object | null, options?: object | null): void;
+    static deleteGroup(event_id: string, group_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
     static registerAttendee(event_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
     static listTickets(event_id: string, query?: object | null, options?: object | null): Promise<any>;
     static hasTicket(event_id: string, account_id: string, query?: object | null, options?: object | null): Promise<any>;
