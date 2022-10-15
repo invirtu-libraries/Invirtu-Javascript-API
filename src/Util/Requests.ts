@@ -70,7 +70,7 @@ class Requests {
 
         let response =axios({
             method: method,
-            url: url,
+            url: route,
             data: body
         });
 

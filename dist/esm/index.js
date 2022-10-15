@@ -15605,8 +15605,9 @@ var Requests = /** @class */ (function () {
         return _a._sendRequest(url, RequestTypes.POST, formData, query, options);
     };
     Requests._sendRequest = function (url, method, data, query, options) {
+        var queryParameters = '';
         if (query) {
-            "?" + _a.toQueryString(query);
+            queryParameters = "?" + _a.toQueryString(query);
         }
         var body = null;
         if (data instanceof FormData && data !== null) {
@@ -15615,6 +15616,7 @@ var Requests = /** @class */ (function () {
         else if (typeof data === 'object' && data !== null) {
             body = data;
         }
+        var route = "https://bw.bingewave.com/" + url + queryParameters;
         ({
             // learn more about this API here: https://graphql-pokemon2.vercel.app/
             method: method,
@@ -15629,7 +15631,7 @@ var Requests = /** @class */ (function () {
         axios.defaults.headers.common['Content-Type'] = 'application/json';
         var response = axios({
             method: method,
-            url: url,
+            url: route,
             data: body
         });
         return response;
