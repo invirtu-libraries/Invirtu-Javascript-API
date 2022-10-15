@@ -519,8 +519,8 @@ declare class Videos {
     static listVideos(data: object, query?: object | null, options?: object | null): Promise<any>;
     static viewVideo(video_id: string, query?: object | null, options?: object | null): Promise<any>;
     static deleteVideo(video_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
-    static uploadMainVideo(filename: string, file: any, video_id: string, data: AnyObject, query?: AnyObject | null, options?: object | null): Promise<any>;
-    static uploadPreviewVideo(video_id: string, filename: string, file: any, data: object, query?: object | null, options?: object | null): Promise<any>;
+    static uploadMainVideo(file_location: string, file: any, video_id: string, data: AnyObject, query?: AnyObject | null, options?: object | null): Promise<any>;
+    static uploadPreviewVideo(video_id: string, file_location: string, file: any, data: object, query?: object | null, options?: object | null): Promise<any>;
     static uploadImage(video_id: string, filename: string, file: any, data: object, query?: object | null, options?: object | null): Promise<any>;
 }
 

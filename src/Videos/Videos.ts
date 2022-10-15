@@ -75,14 +75,14 @@ class Videos {
         return Requests.delete(route, data, query, options);
     }
 
-    public static uploadMainVideo(filename: string, file: any, video_id : string,data : AnyObject, query? : AnyObject | null, options? : object | null){
+    public static uploadMainVideo(file_location: string, file: any, video_id : string,data : AnyObject, query? : AnyObject | null, options? : object | null){
         let route = this.routeUploadMainVideo.route.replaceAll('{id}', video_id)
-        return Requests.upload(filename, file, route, data, query, options);
+        return Requests.uploadChunks(video_id, file_location, route, data, query,options);
     }
     
-    public static uploadPreviewVideo(video_id : string, filename: string, file: any, data : object, query? : object | null, options? : object | null){
+    public static uploadPreviewVideo(video_id : string, file_location: string, file: any, data : object, query? : object | null, options? : object | null){
         let route = this.routePreviewVideo.route.replaceAll('{id}', video_id)
-        return Requests.upload(filename, file, route, data, query, options);
+        return Requests.uploadChunks(video_id, file_location, route, data, query,options);
     }
 
     public static uploadImage(video_id : string, filename: string, file: any, data: object, query? : object | null, options? : object | null){

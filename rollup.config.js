@@ -9,6 +9,7 @@ const packageJson = require("./package.json");
 export default [
   {
     input: "src/index.ts",
+    inlineDynamicImports: true,
     output: [
       {
         file: packageJson.main,
@@ -30,7 +31,7 @@ export default [
   },
   {
     input: "dist/esm/types/index.d.ts",
-    output: [{ file: "dist/index.d.ts", format: "esm" }],
+    output: [{  file: "dist/index.d.ts", format: "esm" }],
     plugins: [dts()],
   },
 ];

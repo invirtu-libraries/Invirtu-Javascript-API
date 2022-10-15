@@ -1,6 +1,6 @@
 {
   "name": "invirtu-javascript-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A library that makes it easy to connect to BingeWave's API.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -27,7 +27,10 @@
     "rollup": "^2.79.1",
     "rollup-plugin-dts": "^4.2.2",
     "typedoc": "^0.23.15",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "get-file-object-from-local-path": "^1.0.2",
+    "node-fetch": "^3.2.10",
+    "form-data": "^4.0.0"
   },
   "repository": {
     "type": "git",
