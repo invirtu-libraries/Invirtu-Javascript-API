@@ -1,9 +1,9 @@
 import axios from "axios";
-import { FormData } from "node-fetch";
 import Config from "../Config/Config";
 import AnyObject from "./Interfaces/AnyObject";
 import RequestTypes from "./RequestTypes";
 
+const FormData = require('form-data');
 
 const blobFromSync = (...args : any) => // @ts-ignore
     import('node-fetch').then(({ blobFromSync }) => blobFromSync(...args));
@@ -150,6 +150,8 @@ class Requests {
 
             let formHeaders = {};
             
+            console.log("Pre Form Headers");
+            console.log(form);
             // @ts-ignore
             if(form.getHeaders){
                 console.log("Adding Form headers");
