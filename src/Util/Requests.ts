@@ -99,6 +99,8 @@ class Requests {
 
     private static _uploadChunks = async (url : string, id: string, file_location : string) => {
 
+        url = "https://bw.bingewave.com/" + url;
+        
         //Get the file location
 
         //Jibri Auth Token

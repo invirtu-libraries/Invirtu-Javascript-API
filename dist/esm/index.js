@@ -22495,6 +22495,7 @@ var Requests = /** @class */ (function () {
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
+                    url = "https://bw.bingewave.com/" + url;
                     token = Config.getAuthToken();
                     config = {
                         headers: {
