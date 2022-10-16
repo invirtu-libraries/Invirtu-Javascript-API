@@ -132,6 +132,8 @@ class Requests {
 
         let upload_id = this.makeid(10);
 
+        let final_response  = null;
+
         for (let start = 0; start < file.size; start += chunkSize) {
 
             const chunk = file.slice(start, start + chunkSize + 1)
@@ -142,20 +144,14 @@ class Requests {
 
             let buffered = Buffer.from(chunkArray);
 
-            // @ts-ignore
             form.append('file', buffered, upload_id);
-            form.append('chunked', 1 + '');
+            form.append('chunked', 1);
             form.append('chunked_id', chunk_id);
-            form.append('totalSize', totalSize + "");
+            form.append('totalSize', totalSize);
 
             let formHeaders = {};
             
-            console.log("Pre Form Headers");
-            console.log(form);
-            // @ts-ignore
             if(form.getHeaders){
-                console.log("Adding Form headers");
-                // @ts-ignore
                 formHeaders = form.getHeaders();
             } 
 
@@ -171,19 +167,24 @@ class Requests {
                 let result = await axios.post(url, form, config)
                 .then(function (response) {
 
-		   // console.log(response);
+		        console.log(response);
+
                     if (response.data && response.data.status == "success" && response.data.data.id) {
-                        return response.data.data;
+                        
                     }
                 })
                 .catch(function (error) {
                     console.error(error);
                 });
 
+                final_response = result;
+
             } catch (error) {
                 console.error(error)
             }
         }
+
+        return final_response;
     }
 
     private static makeid(length : number) {

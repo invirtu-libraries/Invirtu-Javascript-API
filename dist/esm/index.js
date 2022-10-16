@@ -15742,7 +15742,7 @@ var Requests = /** @class */ (function () {
         return response;
     };
     Requests._uploadChunks = function (url, id, file_location) { return __awaiter(void 0, void 0, void 0, function () {
-        var token, config, file, chunkSize, totalSize, chunk_id, upload_id, start, chunk, form, chunkArray, buffered, formHeaders, headers, error_1;
+        var token, config, file, chunkSize, totalSize, chunk_id, upload_id, final_response, start, chunk, form, chunkArray, buffered, formHeaders, headers, result, error_1;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -15763,6 +15763,7 @@ var Requests = /** @class */ (function () {
                     totalSize = file.size;
                     chunk_id = id + '-' + this.makeid(5);
                     upload_id = this.makeid(10);
+                    final_response = null;
                     start = 0;
                     _b.label = 2;
                 case 2:
@@ -15773,18 +15774,12 @@ var Requests = /** @class */ (function () {
                 case 3:
                     chunkArray = _b.sent();
                     buffered = Buffer.from(chunkArray);
-                    // @ts-ignore
                     form.append('file', buffered, upload_id);
-                    form.append('chunked', 1 + '');
+                    form.append('chunked', 1);
                     form.append('chunked_id', chunk_id);
-                    form.append('totalSize', totalSize + "");
+                    form.append('totalSize', totalSize);
                     formHeaders = {};
-                    console.log("Pre Form Headers");
-                    console.log(form);
-                    // @ts-ignore
                     if (form.getHeaders) {
-                        console.log("Adding Form headers");
-                        // @ts-ignore
                         formHeaders = form.getHeaders();
                     }
                     headers = __assign({ "Authorization": "Bearer ".concat(token) }, formHeaders);
@@ -15795,16 +15790,15 @@ var Requests = /** @class */ (function () {
                     _b.trys.push([4, 6, , 7]);
                     return [4 /*yield*/, axios.post(url, form, config)
                             .then(function (response) {
-                            // console.log(response);
-                            if (response.data && response.data.status == "success" && response.data.data.id) {
-                                return response.data.data;
-                            }
+                            console.log(response);
+                            if (response.data && response.data.status == "success" && response.data.data.id) ;
                         })
                             .catch(function (error) {
                             console.error(error);
                         })];
                 case 5:
-                    _b.sent();
+                    result = _b.sent();
+                    final_response = result;
                     return [3 /*break*/, 7];
                 case 6:
                     error_1 = _b.sent();
@@ -15813,7 +15807,7 @@ var Requests = /** @class */ (function () {
                 case 7:
                     start += chunkSize;
                     return [3 /*break*/, 2];
-                case 8: return [2 /*return*/];
+                case 8: return [2 /*return*/, final_response];
             }
         });
     }); };
