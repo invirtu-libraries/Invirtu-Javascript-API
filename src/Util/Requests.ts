@@ -4,8 +4,9 @@ import Config from "../Config/Config";
 import AnyObject from "./Interfaces/AnyObject";
 import RequestTypes from "./RequestTypes";
 
-const blobFromSync = (...args : any) =>
-    import('node-fetch').then(({ blobFromSync }) => blobFromSync(...[args] as const));
+
+const blobFromSync = (...args : any) => // @ts-ignore
+    import('node-fetch').then(({ blobFromSync }) => blobFromSync(...args));
 
 class Requests {
 
@@ -38,11 +39,11 @@ class Requests {
 
     public static uploadChunks = (id: string, file_location: string, url :string, data : AnyObject, query? : object | null, options? : object | null) : Promise<any> => {
 
-        const formData = new FormData();
-
-        Object.keys(data).forEach(key => formData.append(key, data[key]));
-
         return this._uploadChunks(url, id, file_location);
+
+        //const formData = new FormData();
+
+        //Object.keys(data).forEach(key => formData.append(key, data[key]));
         //return this._sendRequest(url, RequestTypes.POST, formData, query, options);
 
     }

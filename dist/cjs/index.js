@@ -22436,7 +22436,7 @@ var blobFromSync = function () {
     }
     return Promise.resolve().then(function () { return index; }).then(function (_a) {
         var blobFromSync = _a.blobFromSync;
-        return blobFromSync.apply(void 0, [args]);
+        return blobFromSync.apply(void 0, args);
     });
 };
 var Requests = /** @class */ (function () {
@@ -22473,9 +22473,9 @@ var Requests = /** @class */ (function () {
         return _a._sendRequest(url, RequestTypes.POST, formData, query, options);
     };
     Requests.uploadChunks = function (id, file_location, url, data, query, options) {
-        var formData = new FormData$1();
-        Object.keys(data).forEach(function (key) { return formData.append(key, data[key]); });
         return _a._uploadChunks(url, id, file_location);
+        //const formData = new FormData();
+        //Object.keys(data).forEach(key => formData.append(key, data[key]));
         //return this._sendRequest(url, RequestTypes.POST, formData, query, options);
     };
     Requests._sendRequest = function (url, method, data, query, options) {
@@ -23825,13 +23825,13 @@ var Videos = /** @class */ (function () {
         var route = this.routeDeleteVideo.route.replaceAll('{id}', video_id);
         return Requests.delete(route, data, query, options);
     };
-    Videos.uploadMainVideo = function (file_location, file, video_id, data, query, options) {
+    Videos.uploadMainVideo = function (file, video_id, data, query, options) {
         var route = this.routeUploadMainVideo.route.replaceAll('{id}', video_id);
-        return Requests.uploadChunks(video_id, file_location, route, data, query, options);
+        return Requests.uploadChunks(video_id, file, route, data, query, options);
     };
-    Videos.uploadPreviewVideo = function (video_id, file_location, file, data, query, options) {
+    Videos.uploadPreviewVideo = function (file, video_id, data, query, options) {
         var route = this.routePreviewVideo.route.replaceAll('{id}', video_id);
-        return Requests.uploadChunks(video_id, file_location, route, data, query, options);
+        return Requests.uploadChunks(video_id, file, route, data, query, options);
     };
     Videos.uploadImage = function (video_id, filename, file, data, query, options) {
         var route = this.routeSetMainImage.route.replaceAll('{id}', video_id);
