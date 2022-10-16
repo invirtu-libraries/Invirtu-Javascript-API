@@ -22473,20 +22473,22 @@ var Requests = /** @class */ (function () {
         var route = "https://bw.bingewave.com/" + url + queryParameters;
         ({
             // learn more about this API here: https://graphql-pokemon2.vercel.app/
-            method: method,
+            //method: method,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + Config.getAuthToken(),
             }
         });
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + Config.getAuthToken();
-        axios.defaults.headers.common['Accept'] = 'application/json';
-        axios.defaults.headers.common['Content-Type'] = 'application/json';
         var response = axios({
             method: method,
             url: route,
-            data: body
+            data: body,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + Config.getAuthToken(),
+            }
         });
         return response;
     };

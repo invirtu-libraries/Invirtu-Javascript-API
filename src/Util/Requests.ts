@@ -68,7 +68,7 @@ class Requests {
 
         let config : AnyObject = {
             // learn more about this API here: https://graphql-pokemon2.vercel.app/
-            method: method,
+            //method: method,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -76,18 +76,23 @@ class Requests {
             }
         }
 
-        axios.defaults.headers.common['Authorization']  = 'Bearer ' + Config.getAuthToken();
-        axios.defaults.headers.common['Accept'] = 'application/json';
-        axios.defaults.headers.common['Content-Type'] = 'application/json';
+        //axios.defaults.headers.common['Authorization']  = 'Bearer ' + Config.getAuthToken();
+        //axios.defaults.headers.common['Accept'] = 'application/json';
+        //axios.defaults.headers.common['Content-Type'] = 'application/json';
 
         if(body){
             config['body'] = body;
         }
 
-        let response =axios({
+        let response = axios({
             method: method,
             url: route,
-            data: body
+            data: body,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + Config.getAuthToken(),
+            }
         });
 
         return response;
@@ -100,7 +105,7 @@ class Requests {
     private static _uploadChunks = async (url : string, id: string, file_location : string) => {
 
         url = "https://bw.bingewave.com/" + url;
-        
+
         //Get the file location
 
         //Jibri Auth Token
