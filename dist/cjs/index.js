@@ -22552,7 +22552,9 @@ var Requests = /** @class */ (function () {
                     formHeaders = {};
                     // @ts-ignore
                     if (form.getHeaders) {
-                        form.getHeaders();
+                        console.log("Adding Form headers");
+                        // @ts-ignore
+                        formHeaders = form.getHeaders();
                     }
                     headers = __assign({ "Authorization": "Bearer ".concat(token) }, formHeaders);
                     // @ts-ignore

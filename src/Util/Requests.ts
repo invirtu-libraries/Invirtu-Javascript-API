@@ -152,8 +152,9 @@ class Requests {
             
             // @ts-ignore
             if(form.getHeaders){
+                console.log("Adding Form headers");
                 // @ts-ignore
-                const formHeaders = form.getHeaders();
+                formHeaders = form.getHeaders();
             } 
 
             let headers = {
