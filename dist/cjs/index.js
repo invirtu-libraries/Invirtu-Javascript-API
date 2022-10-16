@@ -15810,8 +15810,10 @@ var Requests = /** @class */ (function () {
                     _b.trys.push([4, 6, , 7]);
                     return [4 /*yield*/, axios.post(url, form, config)
                             .then(function (response) {
-                            console.log(response);
-                            if (response.data && response.data.status == "success" && response.data.data.id) ;
+                            console.log(response.data);
+                            if (response.data && response.data.status == "success" && response.data.data.id) {
+                                console.log("Upload Complete");
+                            }
                         })
                             .catch(function (error) {
                             console.error(error);

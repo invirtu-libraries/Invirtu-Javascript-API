@@ -167,10 +167,10 @@ class Requests {
                 let result = await axios.post(url, form, config)
                 .then(function (response) {
 
-		        console.log(response);
+		        console.log(response.data);
 
                     if (response.data && response.data.status == "success" && response.data.data.id) {
-                        
+                        console.log("Upload Complete");
                     }
                 })
                 .catch(function (error) {
