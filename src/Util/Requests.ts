@@ -64,7 +64,7 @@ class Requests {
             body = data;
         }
 
-        let route = "https://bw.bingewave.com/" + url + queryParameters;
+        let route = "https://bw.bingewave.com" + url + queryParameters;
 
         let config : AnyObject = {
             // learn more about this API here: https://graphql-pokemon2.vercel.app/
@@ -104,7 +104,7 @@ class Requests {
 
     private static _uploadChunks = async (url : string, id: string, file_location : string) => {
 
-        url = "https://bw.bingewave.com/" + url;
+        url = "https://bw.bingewave.com" + url;
 
         //Get the file location
 
@@ -145,7 +145,7 @@ class Requests {
             let buffered = Buffer.from(chunkArray);
 
             console.log("Chunk ID", chunk_id);
-            
+
             form.append('file', buffered, upload_id);
             form.append('chunked', 1);
             form.append('chunked_id', chunk_id);

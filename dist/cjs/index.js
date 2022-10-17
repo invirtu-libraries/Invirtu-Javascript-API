@@ -15739,7 +15739,7 @@ var Requests = /** @class */ (function () {
         else if (typeof data === 'object' && data !== null) {
             body = data;
         }
-        var route = "https://bw.bingewave.com/" + url + queryParameters;
+        var route = "https://bw.bingewave.com" + url + queryParameters;
         ({
             // learn more about this API here: https://graphql-pokemon2.vercel.app/
             //method: method,
@@ -15766,7 +15766,7 @@ var Requests = /** @class */ (function () {
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
-                    url = "https://bw.bingewave.com/" + url;
+                    url = "https://bw.bingewave.com" + url;
                     token = Config.getAuthToken();
                     config = {
                         headers: {
