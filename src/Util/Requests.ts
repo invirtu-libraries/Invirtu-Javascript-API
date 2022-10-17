@@ -123,8 +123,8 @@ class Requests {
 
         const file = await blobFromSync(file_location);
 
-        //Chunk Size- 10 MB
-        const chunkSize = 10000000;
+        //Chunk Size- 80 MB
+        const chunkSize = 80000000;
 
         const totalSize = file.size;
 
@@ -166,7 +166,9 @@ class Requests {
             try {
                 let result = await axios.post(url, form, config).then(function (response) {
 
-                    if (response.data && response.data.status == "success" && response.data.data.id) {
+                    if (response.data && response.data.status == "success") {
+                        return response.data;
+                    } else if (response.data && response.data.status == "failure" ) {
                         return response.data;
                     }
                 })

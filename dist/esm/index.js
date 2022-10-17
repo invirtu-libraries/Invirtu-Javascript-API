@@ -15759,7 +15759,7 @@ var Requests = /** @class */ (function () {
                     return [4 /*yield*/, blobFromSync$1(file_location)];
                 case 1:
                     file = _b.sent();
-                    chunkSize = 10000000;
+                    chunkSize = 80000000;
                     totalSize = file.size;
                     chunk_id = id + '-' + this.makeid(5);
                     upload_id = this.makeid(10);
@@ -15789,7 +15789,10 @@ var Requests = /** @class */ (function () {
                 case 4:
                     _b.trys.push([4, 6, , 7]);
                     return [4 /*yield*/, axios.post(url, form, config).then(function (response) {
-                            if (response.data && response.data.status == "success" && response.data.data.id) {
+                            if (response.data && response.data.status == "success") {
+                                return response.data;
+                            }
+                            else if (response.data && response.data.status == "failure") {
                                 return response.data;
                             }
                         })
