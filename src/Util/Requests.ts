@@ -144,8 +144,6 @@ class Requests {
 
             let buffered = Buffer.from(chunkArray);
 
-            console.log("Chunk ID", chunk_id);
-
             form.append('file', buffered, upload_id);
             form.append('chunked', 1);
             form.append('chunked_id', chunk_id);
@@ -166,13 +164,10 @@ class Requests {
             config.headers = headers;
 
             try {
-                let result = await axios.post(url, form, config)
-                .then(function (response) {
-
-		        console.log(response.data);
+                let result = await axios.post(url, form, config).then(function (response) {
 
                     if (response.data && response.data.status == "success" && response.data.data.id) {
-                        console.log("Upload Complete");
+                        return response.data;
                     }
                 })
                 .catch(function (error) {

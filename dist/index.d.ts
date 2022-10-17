@@ -328,7 +328,6 @@ declare class Events {
      * @see [Live Events - Delete](https://developers.bingewave.com/docs/events#delete)
      *
      * @param event_id The id of the live event.
-     * @param event_id The id of the live event
      * @param data Data that will be passed in the body of the request.
      * @param query Data that will be passed in the query string as a parameter.
      * @param options Further options that can be used to modify the request.
@@ -339,7 +338,7 @@ declare class Events {
     /**
      * Retrieve a list of chat messages associated with the live event.
      *
-     * @see [Live Events - Delete](https://developers.bingewave.com/docs/chats#list)
+     * @see [Live Events - Get Chats](https://developers.bingewave.com/docs/chats#list)
      *
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -348,9 +347,59 @@ declare class Events {
      * @returns Returns a promise from Axios.
      */
     static getChatMessages(event_id: string, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Retrieve a single chat message that was sent.
+     *
+     * @see [Live Events - Retrieve Single Message](https://developers.bingewave.com/docs/chats#view)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of the message.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static getSingleChatMessage(event_id: string, message_id: string, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Send a new message that will appear in the chat stream.
+     *
+     * @see [Live Events - Send Message](https://developers.bingewave.com/docs/chats#send)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static sendChatMessage(event_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Update a chat message that is associated with an event
+     *
+     * @see [Live Events - Update Message](https://developers.bingewave.com/docs/chats#update)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of the message.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static updateChatMessage(event_id: string, message_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
+    /**
+     * Deletes a chat message so that it no longer shows up in the feed.
+     *
+     * @see [Live Events - Delete Message](https://developers.bingewave.com/docs/chats#delete)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of the message.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     static deleteChatMessage(event_id: string, message_id: string, data?: object | null, query?: object | null, options?: object | null): Promise<any>;
     static getWidgets(event_id: string, query?: object | null, options?: object | null): Promise<any>;
     static addWidget(event_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;

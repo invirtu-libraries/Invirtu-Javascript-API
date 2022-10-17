@@ -15794,7 +15794,6 @@ var Requests = /** @class */ (function () {
                 case 3:
                     chunkArray = _b.sent();
                     buffered = Buffer.from(chunkArray);
-                    console.log("Chunk ID", chunk_id);
                     form.append('file', buffered, upload_id);
                     form.append('chunked', 1);
                     form.append('chunked_id', chunk_id);
@@ -15809,11 +15808,9 @@ var Requests = /** @class */ (function () {
                     _b.label = 4;
                 case 4:
                     _b.trys.push([4, 6, , 7]);
-                    return [4 /*yield*/, axios.post(url, form, config)
-                            .then(function (response) {
-                            console.log(response.data);
+                    return [4 /*yield*/, axios.post(url, form, config).then(function (response) {
                             if (response.data && response.data.status == "success" && response.data.data.id) {
-                                console.log("Upload Complete");
+                                return response.data;
                             }
                         })
                             .catch(function (error) {
@@ -16216,7 +16213,6 @@ var Events = /** @class */ (function () {
      * @see [Live Events - Delete](https://developers.bingewave.com/docs/events#delete)
      *
      * @param event_id The id of the live event.
-     * @param event_id The id of the live event
      * @param data Data that will be passed in the body of the request.
      * @param query Data that will be passed in the query string as a parameter.
      * @param options Further options that can be used to modify the request.
@@ -16230,7 +16226,7 @@ var Events = /** @class */ (function () {
     /**
      * Retrieve a list of chat messages associated with the live event.
      *
-     * @see [Live Events - Delete](https://developers.bingewave.com/docs/chats#list)
+     * @see [Live Events - Get Chats](https://developers.bingewave.com/docs/chats#list)
      *
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -16242,20 +16238,70 @@ var Events = /** @class */ (function () {
         var route = this.routeGetMessagesEvent.route.replaceAll('{id}', event_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Retrieve a single chat message that was sent.
+     *
+     * @see [Live Events - Retrieve Single Message](https://developers.bingewave.com/docs/chats#view)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of the message.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.getSingleChatMessage = function (event_id, message_id, query, options) {
-        var route = this.routeGetMessagesEvent.route.replaceAll('{id}', event_id);
+        var route = this.routeViewMessagesEvent.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{subid}', message_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Send a new message that will appear in the chat stream.
+     *
+     * @see [Live Events - Send Message](https://developers.bingewave.com/docs/chats#send)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.sendChatMessage = function (event_id, data, query, options) {
         var route = this.routeSendMessageEvent.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Update a chat message that is associated with an event
+     *
+     * @see [Live Events - Update Message](https://developers.bingewave.com/docs/chats#update)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of the message.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.updateChatMessage = function (event_id, message_id, data, query, options) {
         var route = this.routeUpdateMessagesEvent.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{subid}', message_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * Deletes a chat message so that it no longer shows up in the feed.
+     *
+     * @see [Live Events - Delete Message](https://developers.bingewave.com/docs/chats#delete)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of the message.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.deleteChatMessage = function (event_id, message_id, data, query, options) {
         var route = this.routeDeleteMessagesEvent.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{subid}', message_id);
