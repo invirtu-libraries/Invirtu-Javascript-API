@@ -15774,6 +15774,7 @@ var Requests = /** @class */ (function () {
                 case 3:
                     chunkArray = _b.sent();
                     buffered = Buffer.from(chunkArray);
+                    console.log("Chunk ID", chunk_id);
                     form.append('file', buffered, upload_id);
                     form.append('chunked', 1);
                     form.append('chunked_id', chunk_id);
