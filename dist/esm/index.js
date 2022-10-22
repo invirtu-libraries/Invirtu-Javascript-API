@@ -1482,6 +1482,11 @@ function requireFollowRedirects () {
 	  };
 	});
 
+	var InvalidUrlError = createErrorType(
+	  "ERR_INVALID_URL",
+	  "Invalid URL",
+	  TypeError
+	);
 	// Error types with codes
 	var RedirectionError = createErrorType(
 	  "ERR_FR_REDIRECTION_FAILURE",
@@ -1542,10 +1547,10 @@ function requireFollowRedirects () {
 	  }
 
 	  // Validate input and shift parameters if necessary
-	  if (!(typeof data === "string" || typeof data === "object" && ("length" in data))) {
+	  if (!isString(data) && !isBuffer(data)) {
 	    throw new TypeError("data should be a string, Buffer or Uint8Array");
 	  }
-	  if (typeof encoding === "function") {
+	  if (isFunction(encoding)) {
 	    callback = encoding;
 	    encoding = null;
 	  }
@@ -1574,11 +1579,11 @@ function requireFollowRedirects () {
 	// Ends the current native request
 	RedirectableRequest.prototype.end = function (data, encoding, callback) {
 	  // Shift parameters if necessary
-	  if (typeof data === "function") {
+	  if (isFunction(data)) {
 	    callback = data;
 	    data = encoding = null;
 	  }
-	  else if (typeof encoding === "function") {
+	  else if (isFunction(encoding)) {
 	    callback = encoding;
 	    encoding = null;
 	  }
@@ -1755,7 +1760,7 @@ function requireFollowRedirects () {
 	    url.format(this._options) :
 	    // When making a request to a proxy, […]
 	    // a client MUST send the target URI in absolute-form […].
-	    this._currentUrl = this._options.path;
+	    this._options.path;
 
 	  // End a redirected request
 	  // (The first request must be ended explicitly with RedirectableRequest#end)
@@ -1876,7 +1881,7 @@ function requireFollowRedirects () {
 	    redirectUrl = url.resolve(currentUrl, location);
 	  }
 	  catch (cause) {
-	    this.emit("error", new RedirectionError(cause));
+	    this.emit("error", new RedirectionError({ cause: cause }));
 	    return;
 	  }
 
@@ -1896,7 +1901,7 @@ function requireFollowRedirects () {
 	  }
 
 	  // Evaluate the beforeRedirect callback
-	  if (typeof beforeRedirect === "function") {
+	  if (isFunction(beforeRedirect)) {
 	    var responseDetails = {
 	      headers: response.headers,
 	      statusCode: statusCode,
@@ -1921,7 +1926,7 @@ function requireFollowRedirects () {
 	    this._performRequest();
 	  }
 	  catch (cause) {
-	    this.emit("error", new RedirectionError(cause));
+	    this.emit("error", new RedirectionError({ cause: cause }));
 	  }
 	};
 
@@ -1943,15 +1948,19 @@ function requireFollowRedirects () {
 	    // Executes a request, following redirects
 	    function request(input, options, callback) {
 	      // Parse parameters
-	      if (typeof input === "string") {
-	        var urlStr = input;
+	      if (isString(input)) {
+	        var parsed;
 	        try {
-	          input = urlToOptions(new URL(urlStr));
+	          parsed = urlToOptions(new URL(input));
 	        }
 	        catch (err) {
 	          /* istanbul ignore next */
-	          input = url.parse(urlStr);
+	          parsed = url.parse(input);
 	        }
+	        if (!isString(parsed.protocol)) {
+	          throw new InvalidUrlError({ input });
+	        }
+	        input = parsed;
 	      }
 	      else if (URL && (input instanceof URL)) {
 	        input = urlToOptions(input);
@@ -1961,7 +1970,7 @@ function requireFollowRedirects () {
 	        options = input;
 	        input = { protocol: protocol };
 	      }
-	      if (typeof options === "function") {
+	      if (isFunction(options)) {
 	        callback = options;
 	        options = null;
 	      }
@@ -1972,6 +1981,9 @@ function requireFollowRedirects () {
 	        maxBodyLength: exports.maxBodyLength,
 	      }, input, options);
 	      options.nativeProtocols = nativeProtocols;
+	      if (!isString(options.host) && !isString(options.hostname)) {
+	        options.hostname = "::1";
+	      }
 
 	      assert.equal(options.protocol, protocol, "protocol mismatch");
 	      debug("options", options);
@@ -2029,21 +2041,19 @@ function requireFollowRedirects () {
 	    undefined : String(lastValue).trim();
 	}
 
-	function createErrorType(code, defaultMessage) {
-	  function CustomError(cause) {
+	function createErrorType(code, message, baseClass) {
+	  // Create constructor
+	  function CustomError(properties) {
 	    Error.captureStackTrace(this, this.constructor);
-	    if (!cause) {
-	      this.message = defaultMessage;
-	    }
-	    else {
-	      this.message = defaultMessage + ": " + cause.message;
-	      this.cause = cause;
-	    }
+	    Object.assign(this, properties || {});
+	    this.code = code;
+	    this.message = this.cause ? message + ": " + this.cause.message : message;
 	  }
-	  CustomError.prototype = new Error();
+
+	  // Attach constructor and set default properties
+	  CustomError.prototype = new (baseClass || Error)();
 	  CustomError.prototype.constructor = CustomError;
 	  CustomError.prototype.name = "Error [" + code + "]";
-	  CustomError.prototype.code = code;
 	  return CustomError;
 	}
 
@@ -2056,8 +2066,21 @@ function requireFollowRedirects () {
 	}
 
 	function isSubdomain(subdomain, domain) {
-	  const dot = subdomain.length - domain.length - 1;
+	  assert(isString(subdomain) && isString(domain));
+	  var dot = subdomain.length - domain.length - 1;
 	  return dot > 0 && subdomain[dot] === "." && subdomain.endsWith(domain);
+	}
+
+	function isString(value) {
+	  return typeof value === "string" || value instanceof String;
+	}
+
+	function isFunction(value) {
+	  return typeof value === "function";
+	}
+
+	function isBuffer(value) {
+	  return typeof value === "object" && ("length" in value);
 	}
 
 	// Exports
@@ -15657,15 +15680,16 @@ var RequestTypes = /** @class */ (function () {
     return RequestTypes;
 }());
 
+require('fs');
 var FormData$2 = require('form-data');
-var blobFromSync$1 = function () {
+var fileFromSync$1 = function () {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
     return Promise.resolve().then(function () { return index; }).then(function (_a) {
-        var blobFromSync = _a.blobFromSync;
-        return blobFromSync.apply(void 0, args);
+        var fileFromSync = _a.fileFromSync;
+        return fileFromSync.apply(void 0, args);
     });
 };
 var Requests = /** @class */ (function () {
@@ -15680,6 +15704,9 @@ var Requests = /** @class */ (function () {
                 charactersLength));
         }
         return result;
+    };
+    Requests.sleep = function (ms) {
+        return new Promise(function (resolve) { return setTimeout(resolve, ms); });
     };
     var _a;
     _a = Requests;
@@ -15742,43 +15769,39 @@ var Requests = /** @class */ (function () {
         return response;
     };
     Requests._uploadChunks = function (url, id, file_location) { return __awaiter(void 0, void 0, void 0, function () {
-        var token, config, file, chunkSize, totalSize, chunk_id, upload_id, final_response, start, chunk, form, chunkArray, buffered, formHeaders, headers, result, error_1;
+        var token, config, file, chunkSize, totalSize, chunk_id, final_response, formHeaders, start, chunk, form, chunkArray, buffered, upload_id, headers, result, error_1;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
                     url = "https://bw.bingewave.com" + url;
                     token = Config.getAuthToken();
                     config = {
-                        headers: {
-                            Authorization: "Bearer ".concat(token),
-                            'Content-Type': 'multipart/form-data'
-                        },
                         maxContentLength: Infinity,
                         maxBodyLength: Infinity,
                     };
-                    return [4 /*yield*/, blobFromSync$1(file_location)];
+                    return [4 /*yield*/, fileFromSync$1(file_location)];
                 case 1:
                     file = _b.sent();
-                    chunkSize = 80000000;
+                    chunkSize = 10000000;
                     totalSize = file.size;
                     chunk_id = id + '-' + this.makeid(5);
-                    upload_id = this.makeid(10);
                     final_response = null;
+                    formHeaders = null;
                     start = 0;
                     _b.label = 2;
                 case 2:
                     if (!(start < file.size)) return [3 /*break*/, 8];
-                    chunk = file.slice(start, start + chunkSize + 1);
+                    chunk = file.slice(start, start + chunkSize);
                     form = new FormData$2();
                     return [4 /*yield*/, chunk.arrayBuffer()];
                 case 3:
                     chunkArray = _b.sent();
                     buffered = Buffer.from(chunkArray);
+                    upload_id = this.makeid(10);
                     form.append('file', buffered, upload_id);
                     form.append('chunked', 1);
                     form.append('chunked_id', chunk_id);
                     form.append('totalSize', totalSize);
-                    formHeaders = {};
                     if (form.getHeaders) {
                         formHeaders = form.getHeaders();
                     }

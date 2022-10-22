@@ -3,10 +3,18 @@ import Config from "../Config/Config";
 import AnyObject from "./Interfaces/AnyObject";
 import RequestTypes from "./RequestTypes";
 
+const fs = require('fs');
+
 const FormData = require('form-data');
 
-const blobFromSync = (...args : any) => 
-    import('node-fetch').then(({ blobFromSync }) => blobFromSync(...[args] as const));
+const blobFrom = (...args : any) => // @ts-ignore
+    import('node-fetch').then(({ blobFrom }) => blobFrom(...args));
+
+const blobFromSync = (...args : any) => // @ts-ignore
+    import('node-fetch').then(({ blobFromSync }) => blobFromSync(...args));
+
+const fileFromSync = (...args : any) => // @ts-ignore
+    import('node-fetch').then(({ fileFromSync }) => fileFromSync(...args));
 
 class Requests {
 
@@ -96,17 +104,11 @@ class Requests {
         });
 
         return response;
-
-        return window.fetch(route, config ).then(function (res) {
-            return res.json();
-        });
     }
 
     private static _uploadChunks = async (url : string, id: string, file_location : string) => {
 
         url = "https://bw.bingewave.com" + url;
-
-        //Get the file location
 
         //Jibri Auth Token
         let token = Config.getAuthToken();
@@ -117,27 +119,22 @@ class Requests {
             maxBodyLength: Infinity,
         };
 
-        const file = await blobFromSync(file_location);
+        const file = await fileFromSync(file_location);
 
-        console.log("File", file);
-        //Chunk Size- 80 MB
-        const chunkSize = 80000000;
+        //Chunk Size- 10 MB
+        const chunkSize = 10000000;
 
         const totalSize = file.size;
 
         let chunk_id = id + '-' + this.makeid(5);
 
-        let upload_id = this.makeid(10);
-
         let final_response  = null;
 
-       
-        for (let start = 0; start < file.size; start += chunkSize) {
-            console.log("Start", start);
-            console.log("File Size", file.size);
-            console.log("Chunk Size", chunkSize);
+        let formHeaders = null;
 
-            const chunk = file.slice(start, start + chunkSize + 1)
+        for (let start = 0; start < file.size; start += chunkSize) {
+
+            const chunk = file.slice(start, start + chunkSize)
 
             const form = new FormData();
 
@@ -145,12 +142,12 @@ class Requests {
 
             let buffered = Buffer.from(chunkArray);
 
+            let upload_id = this.makeid(10);
+            
             form.append('file', buffered, upload_id);
             form.append('chunked', 1);
             form.append('chunked_id', chunk_id);
             form.append('totalSize', totalSize);
-
-            let formHeaders = {};
             
             if(form.getHeaders){
                 formHeaders = form.getHeaders();
@@ -166,8 +163,6 @@ class Requests {
 
             try {
                 let result = await axios.post(url, form, config).then(function (response) {
-
-                    console.log(response.data);
 
                     if (response.data && response.data.status == "success") {
                         return response.data;
@@ -208,6 +203,10 @@ class Requests {
           }
         return str.join("&");
       }
+
+      private static sleep(ms : number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
 }
 
