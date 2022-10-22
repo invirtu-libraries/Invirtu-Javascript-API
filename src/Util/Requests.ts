@@ -5,8 +5,8 @@ import RequestTypes from "./RequestTypes";
 
 const FormData = require('form-data');
 
-const blobFromSync = (...args : any) => // @ts-ignore
-    import('node-fetch').then(({ blobFromSync }) => blobFromSync(...args));
+const blobFromSync = (...args : any) => 
+    import('node-fetch').then(({ blobFromSync }) => blobFromSync(...[args] as const));
 
 class Requests {
 
@@ -113,16 +113,13 @@ class Requests {
 
         //Access Config
         const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data'
-            },
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
         };
 
         const file = await blobFromSync(file_location);
 
+        console.log("File", file);
         //Chunk Size- 80 MB
         const chunkSize = 80000000;
 
@@ -134,7 +131,11 @@ class Requests {
 
         let final_response  = null;
 
+       
         for (let start = 0; start < file.size; start += chunkSize) {
+            console.log("Start", start);
+            console.log("File Size", file.size);
+            console.log("Chunk Size", chunkSize);
 
             const chunk = file.slice(start, start + chunkSize + 1)
 
@@ -165,6 +166,8 @@ class Requests {
 
             try {
                 let result = await axios.post(url, form, config).then(function (response) {
+
+                    console.log(response.data);
 
                     if (response.data && response.data.status == "success") {
                         return response.data;
