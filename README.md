@@ -54,12 +54,12 @@ All the API routes called will return a promise from Axios. This is because the 
 
 If the endpoint was successfully called and passed validation, the status would be a success, and you can parse the data. On the other hand, if the endpoint fails, the status will be a failure, and the error messages can be examined.
 
-Another example where the Config is being used to set an auth token is as such:
+Another example where the Config is being used to set a JWT is as such:
 
 ```
 import { Config, Events } from "invirtu-javascript-api"
 
-Config.setAuthToken("Some Auth Token Value);
+Config.setAuthToken("A_JSON_WEB_TOKEN");
 
 let data = {
   type : 7,
@@ -111,7 +111,7 @@ Products.uploadImage('a_product_id', file).then...
 ```
 import { Tempates } from "invirtu-javascript-api";
 
-Templates.addWidge('a_template_id', {widget_id : 'some_widget_id'}).then...
+Templates.addWidget('a_template_id', {widget_id : 'some_widget_id'}).then...
 ```
 
 ## Building The Library
