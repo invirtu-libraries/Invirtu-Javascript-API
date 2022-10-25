@@ -1,6 +1,6 @@
 {
   "name": "invirtu-javascript-api",
-  "version": "0.3.3",
+  "version": "0.3.6",
   "description": "A library that makes it easy to connect to BingeWave's API.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -40,5 +40,5 @@
   "bugs": {
     "url": "https://github.com/invirtu-libraries/Invirtu-Javascript-API/issues"
   },
-  "homepage": "https://github.com/invirtu-libraries/Invirtu-Javascript-API#readme"
+  "homepage": "https://invirtu-libraries.github.io/Invirtu-Javascript-API/"
 }

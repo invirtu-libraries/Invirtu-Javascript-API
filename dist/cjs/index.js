@@ -15700,16 +15700,15 @@ var RequestTypes = /** @class */ (function () {
     return RequestTypes;
 }());
 
-require('fs');
 var FormData$2 = require('form-data');
-var fileFromSync$1 = function () {
+var blobFromSync$1 = function () {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
     return Promise.resolve().then(function () { return index; }).then(function (_a) {
-        var fileFromSync = _a.fileFromSync;
-        return fileFromSync.apply(void 0, args);
+        var blobFromSync = _a.blobFromSync;
+        return blobFromSync.apply(void 0, args);
     });
 };
 var Requests = /** @class */ (function () {
@@ -15799,7 +15798,7 @@ var Requests = /** @class */ (function () {
                         maxContentLength: Infinity,
                         maxBodyLength: Infinity,
                     };
-                    return [4 /*yield*/, fileFromSync$1(file_location)];
+                    return [4 /*yield*/, blobFromSync$1(file_location)];
                 case 1:
                     file = _b.sent();
                     chunkSize = 10000000;

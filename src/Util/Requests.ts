@@ -3,18 +3,11 @@ import Config from "../Config/Config";
 import AnyObject from "./Interfaces/AnyObject";
 import RequestTypes from "./RequestTypes";
 
-const fs = require('fs');
-
 const FormData = require('form-data');
-
-const blobFrom = (...args : any) => // @ts-ignore
-    import('node-fetch').then(({ blobFrom }) => blobFrom(...args));
 
 const blobFromSync = (...args : any) => // @ts-ignore
     import('node-fetch').then(({ blobFromSync }) => blobFromSync(...args));
 
-const fileFromSync = (...args : any) => // @ts-ignore
-    import('node-fetch').then(({ fileFromSync }) => fileFromSync(...args));
 
 class Requests {
 
@@ -119,7 +112,7 @@ class Requests {
             maxBodyLength: Infinity,
         };
 
-        const file = await fileFromSync(file_location);
+        const file = await blobFromSync(file_location);
 
         //Chunk Size- 10 MB
         const chunkSize = 10000000;
