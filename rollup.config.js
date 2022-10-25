@@ -24,9 +24,11 @@ export default [
     ],
     plugins: [
       json(),
-      resolve(),
+      resolve({
+        browser: true,
+      }),
       commonjs(),
-      typescript({ tsconfig: "./tsconfig.json" }),
+      typescript({ tsconfig: "./tsconfig.json" })
     ],
   },
   {
