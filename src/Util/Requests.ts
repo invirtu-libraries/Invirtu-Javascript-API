@@ -1,9 +1,9 @@
+import FormData from 'isomorphic-form-data';
 import axios from "axios";
 import Config from "../Config/Config";
 import AnyObject from "./Interfaces/AnyObject";
 import RequestTypes from "./RequestTypes";
-
-const FormData = require('form-data');
+import { Buffer } from 'buffer'
 
 const blobFromSync = async (file : string | File | Blob): Promise<Blob | File> => {
   if (!file) {
@@ -141,7 +141,7 @@ const blobFromSync = async (file : string | File | Blob): Promise<Blob | File> =
 
             const form = new FormData();
 
-            let buffered : Blob = new Blob([await chunk.arrayBuffer()]);
+            let buffered = Buffer.from(await chunk.arrayBuffer());
 
             let upload_id = this.makeid(10);
 

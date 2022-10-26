@@ -52,7 +52,9 @@ export default [
     plugins: [
       json(),
       commonjs(),
-      resolve(),
+      resolve({
+        preferBuiltins: true
+      }),
       typescript({ tsconfig: "./tsconfig.cjs.json" })
     ],
   },
