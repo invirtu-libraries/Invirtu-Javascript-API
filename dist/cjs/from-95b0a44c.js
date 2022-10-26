@@ -2,16 +2,17 @@
 
 var node_fs = require('node:fs');
 var node_path = require('node:path');
-var index = require('./index-9eef8cf8.js');
+var index = require('./index-4fdcfbf0.js');
+require('util');
+require('stream');
+require('path');
 require('http');
 require('https');
 require('url');
-require('stream');
+require('fs');
 require('assert');
 require('zlib');
-require('util');
-require('path');
-require('fs');
+require('buffer');
 
 /*! node-domexception. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 
@@ -4697,4 +4698,4 @@ exports.blobFromSync = blobFromSync;
 exports.default = blobFromSync;
 exports.fileFrom = fileFrom;
 exports.fileFromSync = fileFromSync;
-//# sourceMappingURL=from-183c3aab.js.map
+//# sourceMappingURL=from-95b0a44c.js.map

@@ -1,15 +1,16 @@
 'use strict';
 
-var index = require('./index-9eef8cf8.js');
+var index = require('./index-4fdcfbf0.js');
+require('util');
+require('stream');
+require('path');
 require('http');
 require('https');
 require('url');
-require('stream');
+require('fs');
 require('assert');
 require('zlib');
-require('util');
-require('path');
-require('fs');
+require('buffer');
 
 
 
