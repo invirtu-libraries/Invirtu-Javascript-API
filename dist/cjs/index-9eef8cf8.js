@@ -15664,7 +15664,7 @@ var blobFromSync = function (file) { return __awaiter(void 0, void 0, void 0, fu
                     throw new Error('Passed "file" cannot be empty!');
                 }
                 if (!(typeof file === 'string')) return [3 /*break*/, 2];
-                return [4 /*yield*/, Promise.resolve().then(function () { return require('./from-aff502f9.js'); })];
+                return [4 /*yield*/, Promise.resolve().then(function () { return require('./from-183c3aab.js'); })];
             case 1:
                 res = _a.sent();
                 return [2 /*return*/, res.blobFromSync(file)];
@@ -15753,9 +15753,9 @@ var Requests = /** @class */ (function () {
         return response;
     };
     Requests._uploadChunks = function (url, id, file_location) { return __awaiter(void 0, void 0, void 0, function () {
-        var token, config, file, chunkSize, totalSize, chunk_id, final_response, formHeaders, start, chunk, form, chunkArray, buffered, upload_id, headers, result, error_1;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
+        var token, config, file, chunkSize, totalSize, chunk_id, final_response, formHeaders, start, chunk, form, buffered, _b, upload_id, headers, result, error_1;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
                 case 0:
                     url = "https://bw.bingewave.com" + url;
                     token = Config.getAuthToken();
@@ -15765,22 +15765,22 @@ var Requests = /** @class */ (function () {
                     };
                     return [4 /*yield*/, blobFromSync(file_location)];
                 case 1:
-                    file = _b.sent();
+                    file = _c.sent();
                     chunkSize = 10000000;
                     totalSize = file.size;
                     chunk_id = id + '-' + this.makeid(5);
                     final_response = null;
                     formHeaders = null;
                     start = 0;
-                    _b.label = 2;
+                    _c.label = 2;
                 case 2:
                     if (!(start < file.size)) return [3 /*break*/, 8];
                     chunk = file.slice(start, start + chunkSize);
                     form = new FormData$1();
+                    _b = Blob.bind;
                     return [4 /*yield*/, chunk.arrayBuffer()];
                 case 3:
-                    chunkArray = _b.sent();
-                    buffered = Buffer.from(chunkArray);
+                    buffered = new (_b.apply(Blob, [void 0, [_c.sent()]]))();
                     upload_id = this.makeid(10);
                     form.append('file', buffered, upload_id);
                     form.append('chunked', 1);
@@ -15792,9 +15792,9 @@ var Requests = /** @class */ (function () {
                     headers = __assign({ "Authorization": "Bearer ".concat(token) }, formHeaders);
                     // @ts-ignore
                     config.headers = headers;
-                    _b.label = 4;
+                    _c.label = 4;
                 case 4:
-                    _b.trys.push([4, 6, , 7]);
+                    _c.trys.push([4, 6, , 7]);
                     return [4 /*yield*/, axios.post(url, form, config).then(function (response) {
                             if (response.data && response.data.status == "success") {
                                 return response.data;
@@ -15807,11 +15807,11 @@ var Requests = /** @class */ (function () {
                             console.error(error);
                         })];
                 case 5:
-                    result = _b.sent();
+                    result = _c.sent();
                     final_response = result;
                     return [3 /*break*/, 7];
                 case 6:
-                    error_1 = _b.sent();
+                    error_1 = _c.sent();
                     console.error(error_1);
                     return [3 /*break*/, 7];
                 case 7:
@@ -17352,4 +17352,4 @@ exports.Templates = Templates;
 exports.Videos = Videos;
 exports.Widgets = Widgets;
 exports.commonjsGlobal = commonjsGlobal;
-//# sourceMappingURL=index-5c7b76cb.js.map
+//# sourceMappingURL=index-9eef8cf8.js.map
