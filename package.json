@@ -11,7 +11,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c --bundleConfigAsCjs",
+    "build": "rm -Rf dist && rollup -c --bundleConfigAsCjs",
     "build-docs": "rm  -rf docs && typedoc  --tsconfig tsconfig.json src/"
   },
   "author": "Devin Dixon",

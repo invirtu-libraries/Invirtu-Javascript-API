@@ -141,9 +141,7 @@ const blobFromSync = async (file : string | File | Blob): Promise<Blob | File> =
 
             const form = new FormData();
 
-            let chunkArray : string| Blob | ArrayBuffer = await chunk.arrayBuffer();
-
-            let buffered = Buffer.from(chunkArray as any);
+            let buffered : Blob = new Blob([await chunk.arrayBuffer()]);
 
             let upload_id = this.makeid(10);
 
