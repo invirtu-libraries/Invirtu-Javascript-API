@@ -10,7 +10,8 @@ const blobFromSync = async (file : string | File | Blob): Promise<Blob | File> =
     throw new Error('Passed "file" cannot be empty!')
   }
   if (typeof file === 'string') {
-    return import('fetch-blob/from').then((f) => f.blobFromSync(file))
+    const res = await import('fetch-blob/from');
+    return res.blobFromSync(file)
   }
   if (file instanceof File || file instanceof Blob) {
     return file

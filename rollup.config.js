@@ -3,6 +3,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
 import json from "@rollup/plugin-json";
+import polyfillNode from 'rollup-plugin-polyfill-node'
 
 const packageJson = require("./package.json");
 
@@ -10,12 +11,12 @@ const EMPTY_MODULE_ID = '$empty$'
 const EMPTY_MODULE = `export default {}`
 
 const BROWSERIFY_ALIASES = {
-  module: EMPTY_MODULE_ID,
   'fetch-blob/from': EMPTY_MODULE_ID,
+  module: EMPTY_MODULE_ID,
 };
 
 const nodeResolve = resolve({
-  browser: true
+  preferBuiltins: false
 });
 
 const browserify = {
@@ -39,30 +40,57 @@ const browserify = {
 export default [
   {
     input: "src/index.ts",
-    inlineDynamicImports: true,
+    inlineDynamicImports: false,
     output: [
       {
-        file: packageJson.main,
+        dir: packageJson.main.replace('/index.js', ''),
         format: "cjs",
         sourcemap: true,
-      },
+        entryFileNames: 'index.js',
+      }
+    ],
+    plugins: [
+      json(),
+      commonjs(),
+      resolve(),
+      typescript({ tsconfig: "./tsconfig.cjs.json" })
+    ],
+  },
+  {
+    input: "src/index.ts",
+    inlineDynamicImports: false,
+    output: [
       {
-        file: packageJson.module,
+        dir: packageJson.module.replace('/index.js', ''),
         format: "esm",
         sourcemap: true,
+        entryFileNames: 'index.js',
+        sourcemapPathTransform: (relativeSourcePath) => {
+          if (relativeSourcePath.includes('../../index.ts')) {
+            return relativeSourcePath.replace('../../index.ts', '../../src/index.ts')
+          }
+          return relativeSourcePath
+        },
       },
     ],
     plugins: [
       json(),
       commonjs(),
-      browserify,
       nodeResolve,
-      typescript({ tsconfig: "./tsconfig.json" })
+      browserify,
+      // https://github.com/FredKSchott/rollup-plugin-polyfill-node/issues/21
+      polyfillNode(),
+      typescript({
+        tsconfig: "./tsconfig.esm.json",
+        compilerOptions: {
+          sourceRoot: '../'
+        }
+      })
     ],
   },
   {
-    input: "dist/esm/types/index.d.ts",
+    input: "dist/esm/index.d.ts",
     output: [{  file: "dist/index.d.ts", format: "esm" }],
-    plugins: [dts()],
+    plugins: [dts.default()],
   },
 ];
