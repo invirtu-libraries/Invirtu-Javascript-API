@@ -2321,10 +2321,20 @@ var RequestTypes = /** @class */ (function () {
 }());
 
 var FormData$1 = require('form-data');
-// TODO: need different implementation
-var blobFromSync = function () {
-    return Promise.resolve({});
-};
+var blobFromSync = function (file) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        if (!file) {
+            throw new Error('Passed "file" cannot be empty!');
+        }
+        if (typeof file === 'string') {
+            return [2 /*return*/, Promise.resolve().then(function () { return $empty$$1; }).then(function (f) { return f.blobFromSync(file); })];
+        }
+        if (file instanceof File || file instanceof Blob) {
+            return [2 /*return*/, file];
+        }
+        throw new Error('Passed "file" is not a valid File object!');
+    });
+}); };
 var Requests = /** @class */ (function () {
     function Requests() {
     }
@@ -2412,7 +2422,7 @@ var Requests = /** @class */ (function () {
                         maxContentLength: Infinity,
                         maxBodyLength: Infinity,
                     };
-                    return [4 /*yield*/, blobFromSync()];
+                    return [4 /*yield*/, blobFromSync(file_location)];
                 case 1:
                     file = _b.sent();
                     chunkSize = 10000000;
@@ -3989,6 +3999,13 @@ var BWAPI = /** @class */ (function () {
     BWAPI.Videos = Videos;
     return BWAPI;
 }());
+
+var $empty$ = {};
+
+var $empty$$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    'default': $empty$
+});
 
 export { Accounts, Auth, BWAPI, Config, Events, Organizers, Products, Templates, Videos, Widgets };
 //# sourceMappingURL=index.js.map

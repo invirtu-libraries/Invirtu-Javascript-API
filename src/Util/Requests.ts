@@ -5,8 +5,18 @@ import RequestTypes from "./RequestTypes";
 
 const FormData = require('form-data');
 
-// TODO: needs different implementation
-const blobFromSync = (...args : any) => Promise.resolve({} as Blob)
+const blobFromSync = async (file : string | File | Blob): Promise<Blob | File> => {
+  if (!file) {
+    throw new Error('Passed "file" cannot be empty!')
+  }
+  if (typeof file === 'string') {
+    return import('fetch-blob/from').then((f) => f.blobFromSync(file))
+  }
+  if (file instanceof File || file instanceof Blob) {
+    return file
+  }
+  throw new Error('Passed "file" is not a valid File object!')
+}
 
   class Requests {
 
