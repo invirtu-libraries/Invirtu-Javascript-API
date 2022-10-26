@@ -5,11 +5,20 @@ import RequestTypes from "./RequestTypes";
 
 const FormData = require('form-data');
 
-const blobFromSync = (...args : any) => // @ts-ignore
-    import('node-fetch').then(({ blobFromSync }) => blobFromSync(...args));
+const blobFromSync = async (file : string | File | Blob): Promise<Blob | File> => {
+  if (!file) {
+    throw new Error('Passed "file" cannot be empty!')
+  }
+  if (typeof file === 'string') {
+    return import('fetch-blob/from').then((f) => f.blobFromSync(file))
+  }
+  if (file instanceof File || file instanceof Blob) {
+    return file
+  }
+  throw new Error('Passed "file" is not a valid File object!')
+}
 
-
-class Requests {
+  class Requests {
 
     public static post = (url :string, data : object, query? : object | null, options? : object | null) : Promise<any> => {
         return this._sendRequest(url, RequestTypes.POST, data, query, options);
@@ -34,7 +43,7 @@ class Requests {
         formData.append(filename, file)
 
         Object.keys(data).forEach(key => formData.append(key, data[key]));
-  
+
         return this._sendRequest(url, RequestTypes.POST, formData, query, options);
     }
 
@@ -133,18 +142,18 @@ class Requests {
 
             let chunkArray : string| Blob | ArrayBuffer = await chunk.arrayBuffer();
 
-            let buffered = Buffer.from(chunkArray);
+            let buffered = Buffer.from(chunkArray as any);
 
             let upload_id = this.makeid(10);
-            
+
             form.append('file', buffered, upload_id);
             form.append('chunked', 1);
             form.append('chunked_id', chunk_id);
             form.append('totalSize', totalSize);
-            
+
             if(form.getHeaders){
                 formHeaders = form.getHeaders();
-            } 
+            }
 
             let headers = {
                 "Authorization": `Bearer ${token}`,
