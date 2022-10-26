@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./index-5c7b76cb.js');
+var index = require('./index-9eef8cf8.js');
 require('http');
 require('https');
 require('url');

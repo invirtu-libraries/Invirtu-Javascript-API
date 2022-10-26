@@ -2,7 +2,7 @@
 
 var node_fs = require('node:fs');
 var node_path = require('node:path');
-var index = require('./index-5c7b76cb.js');
+var index = require('./index-9eef8cf8.js');
 require('http');
 require('https');
 require('url');
@@ -4697,4 +4697,4 @@ exports.blobFromSync = blobFromSync;
 exports.default = blobFromSync;
 exports.fileFrom = fileFrom;
 exports.fileFromSync = fileFromSync;
-//# sourceMappingURL=from-aff502f9.js.map
+//# sourceMappingURL=from-183c3aab.js.map
