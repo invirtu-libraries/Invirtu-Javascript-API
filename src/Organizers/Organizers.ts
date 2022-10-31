@@ -65,7 +65,15 @@ class Organizers {
     };
 
     
-
+    /**
+     * Show a list organizer associated with the current JSON Web Token.
+     * 
+     * @see [Organizers List - BingeWave](https://developers.bingewave.com/docs/organizers#list)
+     * 
+     * @param query 
+     * @param options 
+     * @returns 
+     */
     public static getOrganizers(query? : object | null, options? : object | null) {
         return Requests.get(this.routeListOrganizers.route, query);
     }
