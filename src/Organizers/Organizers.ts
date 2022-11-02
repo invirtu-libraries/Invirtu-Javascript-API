@@ -130,6 +130,8 @@ class Organizers {
     /**
      * Deletes organizer account.
      * 
+     * @todo Needs documentation.
+     * 
      * @param organizer_id The id of the organizer account.
      * @param data Data that will be passed in the body of the request.
      * @param query Data that will be passed in the query string as a parameter.
@@ -179,6 +181,8 @@ class Organizers {
     /**
      * Creates subscription for organizer account.
      * 
+     * @todo Needs documentation.
+     * 
      * @param organizer_id The id of the organizer account.
      * @param data Data that will be passed in the body of the request.
      * @param query Data that will be passed in the query string as a parameter.
@@ -194,6 +198,8 @@ class Organizers {
     /**
      * Retrieves subscription information from organizer account.
      * 
+     * @todo Needs documentation.
+     * 
      * @param organizer_id The id of the organizer account.
      * @param query Data that will be passed in the query string as a parameter.
      * @param options Further options that can be used to modify the request.
@@ -208,6 +214,8 @@ class Organizers {
 
     /**
      * View the information pertaining to subscription.
+     * 
+     * @todo Needs documentation.
      * 
      * @param organizer_id The id of the organizer account.
      * @param subscription_id The id of subscription.
@@ -227,6 +235,8 @@ class Organizers {
     /**
      * Retrieves the information pertaining to current subscription.
      * 
+     * @todo Needs documentation.
+     * 
      * @param organizer_id The id of the organizer account.
      * @param query Data that will be passed in the query string as a parameter.
      * @param options Further options that can be used to modify the request.
@@ -241,6 +251,8 @@ class Organizers {
 
     /**
      * Cancles subscription.
+     * 
+     * @todo Needs documentation.
      * 
      * @param organizer_id The id of the organizer account.
      * @param data Data that will be passed in the body of the request.
