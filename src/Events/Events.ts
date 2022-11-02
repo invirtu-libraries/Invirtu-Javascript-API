@@ -400,7 +400,7 @@ class Events {
     /**
      * Delete a live event so that it is no longer accessible.
      * 
-     * @see [Live Events - Delete](https://developers.bingewave.com/docs/events#delete)
+     * @see [Live Delete - BingeWave](https://developers.bingewave.com/docs/events#delete)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -417,7 +417,7 @@ class Events {
     /**
      * Retrieve a list of chat messages associated with the live event.
      * 
-     * @see [Live Events - Get Chats](https://developers.bingewave.com/docs/chats#list)
+     * @see [Live Get Chats - BingeWave](https://developers.bingewave.com/docs/chats#list)
      * 
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -433,7 +433,7 @@ class Events {
     /**
      * Retrieve a single chat message that was sent.
      * 
-     * @see [Live Events - Retrieve Single Message](https://developers.bingewave.com/docs/chats#view)
+     * @see [Live Retrieve Single Message - BingeWave](https://developers.bingewave.com/docs/chats#view)
      * 
      * @param event_id The id of the live event.
      * @param message_id The id of the message.
@@ -452,7 +452,7 @@ class Events {
     /**
      * Send a new message that will appear in the chat stream.
      * 
-     * @see [Live Events - Send Message](https://developers.bingewave.com/docs/chats#send)
+     * @see [Live Send Message - BingeWave](https://developers.bingewave.com/docs/chats#send)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -469,7 +469,7 @@ class Events {
     /**
      * Update a chat message that is associated with an event
      * 
-     * @see [Live Events - Update Message](https://developers.bingewave.com/docs/chats#update)
+     * @see [Live Update Message - BingeWave](https://developers.bingewave.com/docs/chats#update)
      * 
      * @param event_id The id of the live event.
      * @param message_id The id of the message.
@@ -489,7 +489,7 @@ class Events {
     /**
      * Deletes a chat message so that it no longer shows up in the feed.
      * 
-     * @see [Live Events - Delete Message](https://developers.bingewave.com/docs/chats#delete)
+     * @see [Live Delete Message - BingeWave](https://developers.bingewave.com/docs/chats#delete)
      * 
      * @param event_id The id of the live event.
      * @param message_id The id of the message.
@@ -509,7 +509,7 @@ class Events {
     /**
      * Retreives list of widgets.
      * 
-     * @see [Live Events - Live Event Widgets](https://developers.bingewave.com/docs/eventwidgets#listwidget)
+     * @see [Live Event Widgets - BingeWave](https://developers.bingewave.com/docs/eventwidgets#listwidget)
      * 
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -525,7 +525,7 @@ class Events {
     /**
      * Add a widget to the live event and set which user roles will have access to the widget.
      * 
-     * @see [Live Events - Add Widget](https://developers.bingewave.com/docs/eventwidgets#addwidget)
+     * @see [Live Add Widget - BingeWave](https://developers.bingewave.com/docs/eventwidgets#addwidget)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -542,7 +542,7 @@ class Events {
     /**
      * Updates widgets information on live event.
      * 
-     * @see [Live Events - Update Widget](https://developers.bingewave.com/docs/eventwidgets#updatewidget)
+     * @see [Live Update Widget - BingeWave](https://developers.bingewave.com/docs/eventwidgets#updatewidget)
      * 
      * @param event_id The id of the live event.
      * @param widget_id The id of the widget.
@@ -562,7 +562,7 @@ class Events {
     /**
      * Removes widget from live event.
      * 
-     * @see [Live Events - Remove Widget](https://developers.bingewave.com/docs/eventwidgets#removewidget)
+     * @see [Live Remove Widget - BingeWave](https://developers.bingewave.com/docs/eventwidgets#removewidget)
      * 
      * @param event_id The id of the live event.
      * @param widget_id The id of the widget.
@@ -582,7 +582,7 @@ class Events {
     /**
      * Sets the position of widget in live event.
      * 
-     * @see [Live Events - Set Widget Position Options](https://developers.bingewave.com/docs/eventwidgets#setoptions)
+     * @see [Live Set Widget Position Options - BingeWave](https://developers.bingewave.com/docs/eventwidgets#setoptions)
      * 
      * @param event_id The id of the live event.
      * @param option_id The id of the position.
@@ -602,7 +602,7 @@ class Events {
     /**
      * Gets the position of widget in live event.
      * 
-     * @see [Live Events - Get Widget Position Options](https://developers.bingewave.com/docs/eventwidgets#getoptions)
+     * @see [Live Get Widget Position Options - BingeWave](https://developers.bingewave.com/docs/eventwidgets#getoptions)
      * 
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -619,7 +619,7 @@ class Events {
     /**
      * Starts broadcast of live event.
      * 
-     * @see [Live Events - Start Broadcasting](https://developers.bingewave.com/docs/eventcommands#startbroadcasting)
+     * @see [Live Start Broadcasting - BingeWave](https://developers.bingewave.com/docs/eventcommands#startbroadcasting)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -637,7 +637,7 @@ class Events {
     /**
      * Stops broadcast of live event.
      * 
-     * @see [Live Events - Stop Broadcasting](https://developers.bingewave.com/docs/eventcommands#stopbroadcasting)
+     * @see [Live Stop Broadcasting - BingeWave](https://developers.bingewave.com/docs/eventcommands#stopbroadcasting)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -655,7 +655,7 @@ class Events {
     /**
      * Starts recording of live event.
      * 
-     * @see [Live Events - Start Recording](https://developers.bingewave.com/docs/eventcommands#startrecording)
+     * @see [Live Start Recording - BingeWave](https://developers.bingewave.com/docs/eventcommands#startrecording)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -673,7 +673,7 @@ class Events {
     /**
      * Stops recording of live event.
      * 
-     * @see [Live Events - Stop Recording](https://developers.bingewave.com/docs/eventcommands#stoprecording)
+     * @see [Live Stop Recording - BingeWave](https://developers.bingewave.com/docs/eventcommands#stoprecording)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -691,7 +691,7 @@ class Events {
     /**
      * Starts stream of live event.
      * 
-     * @see [Live Events - Start Stream](https://developers.bingewave.com/docs/eventcommands#startstream)
+     * @see [Live Start Stream - BingeWave](https://developers.bingewave.com/docs/eventcommands#startstream)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -709,7 +709,7 @@ class Events {
     /**
      * Stop stream of live event.
      * 
-     * @see [Live Events - Start Stream](https://developers.bingewave.com/docs/eventcommands#stopstream)
+     * @see [Live Stop Stream - BingeWave](https://developers.bingewave.com/docs/eventcommands#stopstream)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -727,7 +727,7 @@ class Events {
     /**
      * Cancels live event.
      * 
-     * @see [Live Events - Cancel Event](https://developers.bingewave.com/docs/eventcommands#cancel)
+     * @see [Live Cancel Event - BingeWave](https://developers.bingewave.com/docs/eventcommands#cancel)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -745,7 +745,7 @@ class Events {
     /**
      * Stores event data inside a state.
      * 
-     * @see [Live Events - Set State](https://developers.bingewave.com/docs/eventcommands#setstate)
+     * @see [Live Set State - BingeWave](https://developers.bingewave.com/docs/eventcommands#setstate)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -763,7 +763,7 @@ class Events {
     /**
      * Gets event data inside a state.
      * 
-     * @see [Live Events - Get State](https://developers.bingewave.com/docs/eventcommands#getstate)
+     * @see [Live Get State - BingeWave](https://developers.bingewave.com/docs/eventcommands#getstate)
      * 
      * @param event_id The id of the live event.
      * @param key The key that will be used for retrieving the data later.
@@ -782,7 +782,7 @@ class Events {
     /**
      * Adding up the number of event states.
      * 
-     * @see [Live Events - Increment State By](https://developers.bingewave.com/docs/eventcommands#stateincrement)
+     * @see [Live Increment State By - BingeWave](https://developers.bingewave.com/docs/eventcommands#stateincrement)
      * 
      * @param event_id The id of the live event.
      * @param key The key that will be used for retrieving the data later.
@@ -802,7 +802,7 @@ class Events {
     /**
      * Decreasing the number of event states.
      * 
-     * @see [Live Events - Decrement State By](https://developers.bingewave.com/docs/eventcommands#statedecrement)
+     * @see [Live Decrement State By - BingeWave](https://developers.bingewave.com/docs/eventcommands#statedecrement)
      *  
      * @param event_id The id of the live event.
      * @param key The key that will be used for retrieving the data later.
@@ -822,7 +822,7 @@ class Events {
     /**
      * Creates group for live event.
      * 
-     * @see [Live Events - Create Groups](https://developers.bingewave.com/docs/groups#create)
+     * @see [Live Create Groups - BingeWave](https://developers.bingewave.com/docs/groups#create)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -840,7 +840,7 @@ class Events {
     /**
      * Updates a group information information.
      * 
-     * @see [Live Events - Update Groups](https://developers.bingewave.com/docs/groups#update)
+     * @see [Live Update Groups - BingeWave](https://developers.bingewave.com/docs/groups#update)
      * 
      * @param event_id The id of the live event.
      * @param group_id The id of the group.
@@ -860,7 +860,7 @@ class Events {
     /**
      * List groups that is related to the organizer's account and access token.
      * 
-     * @see [Live Events - List Groups](https://developers.bingewave.com/docs/groups#list)
+     * @see [Live List Groups - BingeWave](https://developers.bingewave.com/docs/groups#list)
      * 
      * @param event_id The id of the live event.
      * @param group_id The id of the group.
@@ -879,7 +879,7 @@ class Events {
     /**
      * View the information pertaining to a single group.
      * 
-     * @see [Live Events - List Groups](https://developers.bingewave.com/docs/groups#view)
+     * @see [Live List Groups - BingeWave](https://developers.bingewave.com/docs/groups#view)
      * 
      * @param event_id The id of the live event.
      * @param group_id The id of the group.
@@ -896,9 +896,9 @@ class Events {
     }
 
     /**
-     * Deletes group
+     * Deletes a group from an event.
      * 
-     * @see [Live Events - Delete Group](https://developers.bingewave.com/docs/groups#delete)
+     * @see [Live Delete Group - BingeWave](https://developers.bingewave.com/docs/groups#delete)
      * 
      * @param event_id The id of the live event.
      * @param group_id The id of the group.
@@ -918,7 +918,7 @@ class Events {
     /**
      * Register an attendee for either a free or paid event
      * 
-     * @see [Live Events - Register Attendee](https://developers.bingewave.com/docs/attendees#register)
+     * @see [Live Register Attendee - BingeWave](https://developers.bingewave.com/docs/attendees#register)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -936,7 +936,7 @@ class Events {
     /**
      * Lists tickets/RSVPs in relation to the event being addressesed.
      * 
-     * @see [Live Events - List Tickets](https://developers.bingewave.com/docs/attendees#list)
+     * @see [Live List Tickets - BingeWave](https://developers.bingewave.com/docs/attendees#list)
      * 
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -953,7 +953,7 @@ class Events {
     /**
      * Checks if a attendee has a valid ticket to the current event.
      * 
-     * @see [Live Events - Has Ticket](https://developers.bingewave.com/docs/attendees#hasticket)
+     * @see [Live Has Ticket - BingeWave](https://developers.bingewave.com/docs/attendees#hasticket)
      * 
      * @param event_id The id of the live event.
      * @param account_id The id of account.
@@ -972,7 +972,7 @@ class Events {
     /**
      * View the current ticket's information.
      * 
-     * @see [Live Events - View Ticket](https://developers.bingewave.com/docs/attendees#view)
+     * @see [Live View Ticket - BingeWave](https://developers.bingewave.com/docs/attendees#view)
      * 
      * @param event_id The id of the live event.
      * @param ticket_id Id of attendee ticket.
@@ -991,7 +991,7 @@ class Events {
     /**
      * Issues a refund for a purchased ticket.
      * 
-     * @see [Live Events - Refund Ticket](https://developers.bingewave.com/docs/attendees#refund)
+     * @see [Live Refund Ticket - BingeWave](https://developers.bingewave.com/docs/attendees#refund)
      * 
      * @param event_id The id of the live event.
      * @param ticket_id Id of attendee ticket.
@@ -1011,7 +1011,7 @@ class Events {
     /**
      * Manually add user as an attendee to event.
      * 
-     * @see [Live Events - Manually Add User](https://developers.bingewave.com/docs/attendees#addattendee)
+     * @see [Live Manually Add User - BingeWave](https://developers.bingewave.com/docs/attendees#addattendee)
      * 
      * @param user_id Id of user.
      * @param data Data that will be passed in the body of the request.
@@ -1029,7 +1029,7 @@ class Events {
     /**
      * Manually remove user as an attendee to event.
      * 
-     * @see [Live Events - Manually Remove User](https://developers.bingewave.com/docs/attendees#removeattendee)
+     * @see [Live Manually Remove User - BingeWave](https://developers.bingewave.com/docs/attendees#removeattendee)
      * 
      * @param user_id Id of user.
      * @param data Data that will be passed in the body of the request.
@@ -1047,7 +1047,7 @@ class Events {
     /**
      * Retrieves all the users who are participants of the live event.
      * 
-     * @see [Live Events - Get Participants](https://developers.bingewave.com/docs/status#participants)
+     * @see [Live Get Participants - BingeWave](https://developers.bingewave.com/docs/status#participants)
      * 
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -1064,7 +1064,7 @@ class Events {
     /**
      * List all the users that are currently online.
      * 
-     * @see [Live Events - Online Users](https://developers.bingewave.com/docs/status#onlineusers)
+     * @see [Live Online Users - BingeWave](https://developers.bingewave.com/docs/status#onlineusers)
      * 
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -1081,7 +1081,7 @@ class Events {
     /**
      * Retrieves a user's status based on the user's id as well as the user's roles.
      * 
-     * @see [Live Events - Get User Status](https://developers.bingewave.com/docs/status#getstatus)
+     * @see [Live Get User Status - BingeWave](https://developers.bingewave.com/docs/status#getstatus)
      * 
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -1098,7 +1098,7 @@ class Events {
     /**
      * Makes a user a moderator of the current live event.
      * 
-     * @see [Live Events - Make Moderator](https://developers.bingewave.com/docs/status#makemoderator)
+     * @see [Live Make Moderator - BingeWave](https://developers.bingewave.com/docs/status#makemoderator)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1115,7 +1115,7 @@ class Events {
     /**
      * Removes a user as a moderator from the current live event.
      * 
-     * @see [Live Events - Remove As Moderator](https://developers.bingewave.com/docs/status#removemoderator)
+     * @see [Live Remove As Moderator - BingeWave](https://developers.bingewave.com/docs/status#removemoderator)
      * 
      * @param event_id The id of the live event.
      * @param message_id The id of user's message.
@@ -1134,7 +1134,7 @@ class Events {
     /**
      * Makes a user a panelist of the current live event.
      * 
-     * @see [Live Events - Make Panelist](https://developers.bingewave.com/docs/status#makepanelist)
+     * @see [Live Make Panelist - BingeWave](https://developers.bingewave.com/docs/status#makepanelist)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1152,7 +1152,7 @@ class Events {
     /**
      * Removes a user as a panelist from the current live event.
      * 
-     * @see [Live Events - Remove As Panelist](https://developers.bingewave.com/docs/status#removepanelist)
+     * @see [Live Remove As Panelist - RBingeWave](https://developers.bingewave.com/docs/status#removepanelist)
      * 
      * @param event_id The id of the live event.
      * @param message_id The id of user's message.
@@ -1171,7 +1171,7 @@ class Events {
     /**
      * Set the user's role in the current live event as a participant.
      * 
-     * @see [Live Events - Make Participant](https://developers.bingewave.com/docs/status#makeparticipant)
+     * @see [Live Make Participant - BingeWave](https://developers.bingewave.com/docs/status#makeparticipant)
      * 
      * @param data Data that will be passed in the body of the request.
      * @param query Data that will be passed in the query string as a parameter.
@@ -1186,7 +1186,7 @@ class Events {
     /**
      * Removes the user's role as a participant from the current live event.
      * 
-     * @see [Live Events - Remove Participant](https://developers.bingewave.com/docs/status#removeparticipant)
+     * @see [Live Remove Participant - BingeWave](https://developers.bingewave.com/docs/status#removeparticipant)
      * 
      * @param event_id The id of the live event.
      * @param message_id The id of user's message.
@@ -1205,7 +1205,7 @@ class Events {
     /**
      * Blocks the user from participating in the current live event.
      * 
-     * @see [Live Events - Block User](https://developers.bingewave.com/docs/status#blockuser)
+     * @see [Live Block User - BingeWave](https://developers.bingewave.com/docs/status#blockuser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1222,7 +1222,7 @@ class Events {
     /**
      * Removes the block that prevents the user from participating in the current live event.
      * 
-     * @see [Live Events - Unblock User](https://developers.bingewave.com/docs/status#unblockuser)
+     * @see [Live Unblock User - BingeWave](https://developers.bingewave.com/docs/status#unblockuser)
      * 
      * @param event_id The id of the live event.
      * @param message_id The id of user's message.
@@ -1242,7 +1242,7 @@ class Events {
     /**
      * Turns the user's video on during a video call.
      * 
-     * @see [Live Events - Turn On User's Video](https://developers.bingewave.com/docs/status#videoonuser)
+     * @see [Live Turn On User's Video - BingeWave](https://developers.bingewave.com/docs/status#videoonuser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1260,7 +1260,7 @@ class Events {
     /**
      * Turns the user's video off during a video call.
      * 
-     * @see [Live Events - Turn Off User's Video](https://developers.bingewave.com/docs/status#videooffuser)
+     * @see [Live Turn Off User's Video - BingeWave](https://developers.bingewave.com/docs/status#videooffuser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1278,7 +1278,7 @@ class Events {
     /**
      * Turns the user's audio on during a video call.
      * 
-     * @see [Live Events - Unmute User's Audio](https://developers.bingewave.com/docs/status#unmuteaudiouser)
+     * @see [Live Unmute User's Audio - BingeWave](https://developers.bingewave.com/docs/status#unmuteaudiouser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1296,7 +1296,7 @@ class Events {
     /**
      * Turns the user's audio off during a video call.
      * 
-     * @see [Live Events - Mute User's Audio](https://developers.bingewave.com/docs/status#muteaudiouser)
+     * @see [Live Mute User's Audio - BingeWave](https://developers.bingewave.com/docs/status#muteaudiouser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1314,7 +1314,7 @@ class Events {
     /**
      * Share the user's desktop during a video call.
      * 
-     * @see [Live Events - Share User's Desktop](https://developers.bingewave.com/docs/status#sharedesktopuser)
+     * @see [Live Share User's Desktop - BingeWave](https://developers.bingewave.com/docs/status#sharedesktopuser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1332,7 +1332,7 @@ class Events {
     /**
      * Share the user's video during the call.
      * 
-     * @see [Live Events - Share User's Video](https://developers.bingewave.com/docs/status#sharevideouser)
+     * @see [Live Share User's Video - BingeWave](https://developers.bingewave.com/docs/status#sharevideouser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1350,7 +1350,7 @@ class Events {
     /**
      * There is the ability to hide a users video from all participants except moderators.
      * 
-     * @see [Live Events - Hide User's Video From All](https://developers.bingewave.com/docs/status#hidevideofromalluser)
+     * @see [Live Hide User's Video From All - BingeWave](https://developers.bingewave.com/docs/status#hidevideofromalluser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1368,7 +1368,7 @@ class Events {
     /**
      * Add a user to the staging container.
      * 
-     * @see [Live Events - Add User To Stage](https://developers.bingewave.com/docs/status#tostageuser)
+     * @see [Live Add User To Stage - BingeWave](https://developers.bingewave.com/docs/status#tostageuser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1386,7 +1386,7 @@ class Events {
     /**
      * Add a user to the audience container.
      * 
-     * @see [Live Events - Add User To Audience](https://developers.bingewave.com/docs/status#toaudienceuser)
+     * @see [Live Add User To Audience - BingeWave](https://developers.bingewave.com/docs/status#toaudienceuser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1404,7 +1404,7 @@ class Events {
     /**
      * Will connect a user to the current video call programmatically.
      * 
-     * @see [Live Events - Connect User](https://developers.bingewave.com/docs/status#connectuser)
+     * @see [Live Connect User - BingeWave](https://developers.bingewave.com/docs/status#connectuser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1422,7 +1422,7 @@ class Events {
     /**
      * Will disconnect a user from the current video call.
      * 
-     * @see [Live Events - Disconnect User](https://developers.bingewave.com/docs/status#disconnectuser)
+     * @see [Live Disconnect User - BingeWave](https://developers.bingewave.com/docs/status#disconnectuser)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1440,7 +1440,7 @@ class Events {
     /**
      * Normally layouts are set for the entire class.
      * 
-     * @see [Live Events - Set Personal Layout](https://developers.bingewave.com/docs/status#setpersonallayout)
+     * @see [Live Set Personal Layout - BingeWave](https://developers.bingewave.com/docs/status#setpersonallayout)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1458,7 +1458,7 @@ class Events {
     /**
      * Change the users camera input to another video source.
      * 
-     * @see [Live Events - Change Video Device](https://developers.bingewave.com/docs/status#videoinput)
+     * @see [Live Change Video Device - BingeWave](https://developers.bingewave.com/docs/status#videoinput)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -1476,7 +1476,7 @@ class Events {
     /**
      * Change the users camera input to another video source.
      * 
-     * @see [Live Events - Change Audio Device](https://developers.bingewave.com/docs/status#audioinput)
+     * @see [Live Change Audio Device - BingeWave](https://developers.bingewave.com/docs/status#audioinput)
      * 
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
