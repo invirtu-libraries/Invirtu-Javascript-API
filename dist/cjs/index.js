@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./index-4fdcfbf0.js');
+var index = require('./index-3ec98c0a.js');
 require('util');
 require('stream');
 require('path');

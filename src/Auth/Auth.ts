@@ -30,7 +30,32 @@ class Auth {
     };
 
     private static routeRegisterToOrganizer: Route = {
-        route: "/registerToOrganizer",
+        route: "/auth/registerToOrganizer",
+        method: RequestTypes.POST
+    };
+
+    private static routeSyncToOrganizer: Route = {
+        route: "/auth/syncToOrganizer",
+        method: RequestTypes.POST
+    };
+
+    private static routeValidateOrganizerToken: Route = {
+        route: "/auth/validateOrganizerToken",
+        method: RequestTypes.POST
+    };
+
+    private static routeValidateAccountToken: Route = {
+        route: "/auth/validateAccountToken",
+        method: RequestTypes.POST
+    };
+
+    private static routeInvalidateOrganizerToken: Route = {
+        route: "/auth/invalidateOrganizerToken",
+        method: RequestTypes.POST
+    };
+
+    private static routeInvalidateAccountToken: Route = {
+        route: "/auth/invalidateAccountToken",
         method: RequestTypes.POST
     };
 
@@ -92,6 +117,69 @@ class Auth {
      */
     public static registerToOrganizer(data: object, query?: object | null, options?: object | null) : Promise<any> {
         return Requests.post(this.routeRegisterToOrganizer.route, data, query, options);
+    }
+
+    /**
+     * If an account does not exist with an organizer, it will create one. Otherwise it will log the curent account into the organizer. This requires an organizer auth token.
+     * 
+     * @see [Authorization Sync To Organizer - BingeWave](https://developers.bingewave.com/docs/auth#synctoorganizer)
+     * 
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     * 
+     * @returns Returns a promise from Axios.
+     */
+     public static syncToOrganizer(data: object, query?: object | null, options?: object | null) : Promise<any> {
+        return Requests.post(this.routeSyncToOrganizer.route, data, query, options);
+    }
+
+    /**
+     * Checks if an organizer token is valid.
+     * 
+     * @see [Authorization Validate Organizer Token - BingeWave](https://developers.bingewave.com/docs/auth#validateorganizertoken)
+     * 
+     * 
+     * @returns Returns a promise from Axios.
+     */
+    public static validateOrganizerToken() : Promise<any> {
+        return Requests.post(this.routeValidateOrganizerToken.route, {}, {}, {});
+    }
+
+    /**
+     * Checks if an account's token is valid.
+     * 
+     * @see [Authorization Validate Account Token - BingeWave](https://developers.bingewave.com/docs/auth#validateorganizertoken)
+     * 
+     * 
+     * @returns Returns a promise from Axios.
+     */
+     public static validateAccountToken() : Promise<any> {
+        return Requests.post(this.routeValidateAccountToken.route, {}, {}, {});
+    }
+
+    /**
+     * Invalidates an organizer token so that it is no longer useable. Think of it as logging out.
+     * 
+     * @see [Authorization Validate Organizer Token - BingeWave](https://developers.bingewave.com/docs/auth#invalidateaccounttoken)
+     * 
+     * 
+     * @returns Returns a promise from Axios.
+     */
+     public static invalidateOrganizerToken() : Promise<any> {
+        return Requests.post(this.routeInvalidateOrganizerToken.route, {}, {}, {});
+    }
+
+    /**
+     * Invalidates an account's token so that it is no longer useable. Think of it as logging out.
+     * 
+     * @see [Authorization Validate Account Token - BingeWave](https://developers.bingewave.com/docs/auth#invalidateaccounttoken)
+     * 
+     * 
+     * @returns Returns a promise from Axios.
+     */
+     public static invalidateAccountToken() : Promise<any> {
+        return Requests.post(this.routeInvalidateAccountToken.route, {}, {}, {});
     }
 
 }

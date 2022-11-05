@@ -429,6 +429,8 @@ Buffer.from = function (value, encodingOrOffset, length) {
 if (Buffer.TYPED_ARRAY_SUPPORT) {
   Buffer.prototype.__proto__ = Uint8Array.prototype;
   Buffer.__proto__ = Uint8Array;
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) ;
 }
 
 function assertSize (size) {
@@ -6803,14 +6805,20 @@ function parse$1(qs, sep, eq, options) {
   return obj;
 }
 
-// Copyright Joyent, Inc. and other Node contributors.
+// WHATWG API
+const URL = global$1.URL;
+const URLSearchParams = global$1.URLSearchParams;
 var _polyfillNode_url = {
   parse: urlParse,
   resolve: urlResolve,
   resolveObject: urlResolveObject,
   fileURLToPath: urlFileURLToPath,
   format: urlFormat,
-  Url: Url
+  Url: Url,
+
+  // WHATWG API
+  URL,
+  URLSearchParams,  
 };
 function Url() {
   this.protocol = null;
@@ -7552,6 +7560,8 @@ var _polyfillNode_url$1 = /*#__PURE__*/Object.freeze({
     resolveObject: urlResolveObject,
     fileURLToPath: urlFileURLToPath,
     format: urlFormat,
+    URL: URL,
+    URLSearchParams: URLSearchParams,
     default: _polyfillNode_url,
     Url: Url
 });
@@ -30494,6 +30504,64 @@ var Auth = /** @class */ (function () {
     Auth.registerToOrganizer = function (data, query, options) {
         return Requests.post(this.routeRegisterToOrganizer.route, data, query, options);
     };
+    /**
+     * If an account does not exist with an organizer, it will create one. Otherwise it will log the curent account into the organizer. This requires an organizer auth token.
+     *
+     * @see [Authorization Sync To Organizer - BingeWave](https://developers.bingewave.com/docs/auth#synctoorganizer)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
+    Auth.syncToOrganizer = function (data, query, options) {
+        return Requests.post(this.routeSyncToOrganizer.route, data, query, options);
+    };
+    /**
+     * Checks if an organizer token is valid.
+     *
+     * @see [Authorization Validate Organizer Token - BingeWave](https://developers.bingewave.com/docs/auth#validateorganizertoken)
+     *
+     *
+     * @returns Returns a promise from Axios.
+     */
+    Auth.validateOrganizerToken = function () {
+        return Requests.post(this.routeValidateOrganizerToken.route, {}, {}, {});
+    };
+    /**
+     * Checks if an account's token is valid.
+     *
+     * @see [Authorization Validate Account Token - BingeWave](https://developers.bingewave.com/docs/auth#validateorganizertoken)
+     *
+     *
+     * @returns Returns a promise from Axios.
+     */
+    Auth.validateAccountToken = function () {
+        return Requests.post(this.routeValidateAccountToken.route, {}, {}, {});
+    };
+    /**
+     * Invalidates an organizer token so that it is no longer useable. Think of it as logging out.
+     *
+     * @see [Authorization Validate Organizer Token - BingeWave](https://developers.bingewave.com/docs/auth#invalidateaccounttoken)
+     *
+     *
+     * @returns Returns a promise from Axios.
+     */
+    Auth.invalidateOrganizerToken = function () {
+        return Requests.post(this.routeInvalidateOrganizerToken.route, {}, {}, {});
+    };
+    /**
+     * Invalidates an account's token so that it is no longer useable. Think of it as logging out.
+     *
+     * @see [Authorization Validate Account Token - BingeWave](https://developers.bingewave.com/docs/auth#invalidateaccounttoken)
+     *
+     *
+     * @returns Returns a promise from Axios.
+     */
+    Auth.invalidateAccountToken = function () {
+        return Requests.post(this.routeInvalidateAccountToken.route, {}, {}, {});
+    };
     Auth.routeLogin = {
         route: "/auth/login",
         method: RequestTypes.POST
@@ -30511,7 +30579,27 @@ var Auth = /** @class */ (function () {
         method: RequestTypes.POST
     };
     Auth.routeRegisterToOrganizer = {
-        route: "/registerToOrganizer",
+        route: "/auth/registerToOrganizer",
+        method: RequestTypes.POST
+    };
+    Auth.routeSyncToOrganizer = {
+        route: "/auth/syncToOrganizer",
+        method: RequestTypes.POST
+    };
+    Auth.routeValidateOrganizerToken = {
+        route: "/auth/validateOrganizerToken",
+        method: RequestTypes.POST
+    };
+    Auth.routeValidateAccountToken = {
+        route: "/auth/validateAccountToken",
+        method: RequestTypes.POST
+    };
+    Auth.routeInvalidateOrganizerToken = {
+        route: "/auth/invalidateOrganizerToken",
+        method: RequestTypes.POST
+    };
+    Auth.routeInvalidateAccountToken = {
+        route: "/auth/invalidateAccountToken",
         method: RequestTypes.POST
     };
     return Auth;
@@ -30798,7 +30886,7 @@ var Events = /** @class */ (function () {
     /**
      * Delete a live event so that it is no longer accessible.
      *
-     * @see [Live Events - Delete](https://developers.bingewave.com/docs/events#delete)
+     * @see [Live Delete - BingeWave](https://developers.bingewave.com/docs/events#delete)
      *
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -30814,7 +30902,7 @@ var Events = /** @class */ (function () {
     /**
      * Retrieve a list of chat messages associated with the live event.
      *
-     * @see [Live Events - Get Chats](https://developers.bingewave.com/docs/chats#list)
+     * @see [Live Get Chats - BingeWave](https://developers.bingewave.com/docs/chats#list)
      *
      * @param event_id The id of the live event.
      * @param query Data that will be passed in the query string as a parameter.
@@ -30829,7 +30917,7 @@ var Events = /** @class */ (function () {
     /**
      * Retrieve a single chat message that was sent.
      *
-     * @see [Live Events - Retrieve Single Message](https://developers.bingewave.com/docs/chats#view)
+     * @see [Live Retrieve Single Message - BingeWave](https://developers.bingewave.com/docs/chats#view)
      *
      * @param event_id The id of the live event.
      * @param message_id The id of the message.
@@ -30846,7 +30934,7 @@ var Events = /** @class */ (function () {
     /**
      * Send a new message that will appear in the chat stream.
      *
-     * @see [Live Events - Send Message](https://developers.bingewave.com/docs/chats#send)
+     * @see [Live Send Message - BingeWave](https://developers.bingewave.com/docs/chats#send)
      *
      * @param event_id The id of the live event.
      * @param data Data that will be passed in the body of the request.
@@ -30862,7 +30950,7 @@ var Events = /** @class */ (function () {
     /**
      * Update a chat message that is associated with an event
      *
-     * @see [Live Events - Update Message](https://developers.bingewave.com/docs/chats#update)
+     * @see [Live Update Message - BingeWave](https://developers.bingewave.com/docs/chats#update)
      *
      * @param event_id The id of the live event.
      * @param message_id The id of the message.
@@ -30880,7 +30968,7 @@ var Events = /** @class */ (function () {
     /**
      * Deletes a chat message so that it no longer shows up in the feed.
      *
-     * @see [Live Events - Delete Message](https://developers.bingewave.com/docs/chats#delete)
+     * @see [Live Delete Message - BingeWave](https://developers.bingewave.com/docs/chats#delete)
      *
      * @param event_id The id of the live event.
      * @param message_id The id of the message.
@@ -30895,231 +30983,884 @@ var Events = /** @class */ (function () {
         route = route.replaceAll('{subid}', message_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Retreives list of widgets.
+     *
+     * @see [Live Event Widgets - BingeWave](https://developers.bingewave.com/docs/eventwidgets#listwidget)
+     *
+     * @param event_id The id of the live event.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.getWidgets = function (event_id, query, options) {
         var route = this.routeListWidgets.route.replaceAll('{id}', event_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Add a widget to the live event and set which user roles will have access to the widget.
+     *
+     * @see [Live Add Widget - BingeWave](https://developers.bingewave.com/docs/eventwidgets#addwidget)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.addWidget = function (event_id, data, query, options) {
         var route = this.routeAddWidget.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Updates widgets information on live event.
+     *
+     * @see [Live Update Widget - BingeWave](https://developers.bingewave.com/docs/eventwidgets#updatewidget)
+     *
+     * @param event_id The id of the live event.
+     * @param widget_id The id of the widget.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.updateWidget = function (event_id, widget_id, data, query, options) {
         var route = this.routeUpdateWidget.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{subid}', widget_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * Removes widget from live event.
+     *
+     * @see [Live Remove Widget - BingeWave](https://developers.bingewave.com/docs/eventwidgets#removewidget)
+     *
+     * @param event_id The id of the live event.
+     * @param widget_id The id of the widget.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.deleteWidget = function (event_id, widget_id, data, query, options) {
         var route = this.routeRemoveWidget.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{subid}', widget_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Sets the position of widget in live event.
+     *
+     * @see [Live Set Widget Position Options - BingeWave](https://developers.bingewave.com/docs/eventwidgets#setoptions)
+     *
+     * @param event_id The id of the live event.
+     * @param option_id The id of the position.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.setWidgetPositioningOption = function (event_id, option_id, data, query, options) {
         var route = this.routeSetOptionsWidget.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{subid}', option_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Gets the position of widget in live event.
+     *
+     * @see [Live Get Widget Position Options - BingeWave](https://developers.bingewave.com/docs/eventwidgets#getoptions)
+     *
+     * @param event_id The id of the live event.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.getWidgetPositioningOption = function (event_id, query, options) {
         var route = this.routeGetOptionsWidget.route.replaceAll('{id}', event_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Starts broadcast of live event.
+     *
+     * @see [Live Start Broadcasting - BingeWave](https://developers.bingewave.com/docs/eventcommands#startbroadcasting)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.startBroadcast = function (event_id, data, query, options) {
         var route = this.routeStartBroadcasting.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Stops broadcast of live event.
+     *
+     * @see [Live Stop Broadcasting - BingeWave](https://developers.bingewave.com/docs/eventcommands#stopbroadcasting)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.stopBroadcast = function (event_id, data, query, options) {
         var route = this.routeStopBroadcasting.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Starts recording of live event.
+     *
+     * @see [Live Start Recording - BingeWave](https://developers.bingewave.com/docs/eventcommands#startrecording)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.startRecording = function (event_id, data, query, options) {
         var route = this.routeStartRecording.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Stops recording of live event.
+     *
+     * @see [Live Stop Recording - BingeWave](https://developers.bingewave.com/docs/eventcommands#stoprecording)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.stopRecording = function (event_id, data, query, options) {
         var route = this.routeStopRecording.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Starts stream of live event.
+     *
+     * @see [Live Start Stream - BingeWave](https://developers.bingewave.com/docs/eventcommands#startstream)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.startStreaming = function (event_id, data, query, options) {
         var route = this.routeStartStream.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Stop stream of live event.
+     *
+     * @see [Live Stop Stream - BingeWave](https://developers.bingewave.com/docs/eventcommands#stopstream)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.stopStreaming = function (event_id, data, query, options) {
         var route = this.routeStopStream.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Cancels live event.
+     *
+     * @see [Live Cancel Event - BingeWave](https://developers.bingewave.com/docs/eventcommands#cancel)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.cancelEvent = function (event_id, data, query, options) {
         var route = this.routeCancelEvent.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Stores event data inside a state.
+     *
+     * @see [Live Set State - BingeWave](https://developers.bingewave.com/docs/eventcommands#setstate)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.setState = function (event_id, data, query, options) {
         var route = this.routeSetState.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Gets event data inside a state.
+     *
+     * @see [Live Get State - BingeWave](https://developers.bingewave.com/docs/eventcommands#getstate)
+     *
+     * @param event_id The id of the live event.
+     * @param key The key that will be used for retrieving the data later.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.getState = function (event_id, key, query, options) {
         var route = this.routeGetState.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{key}', key);
         return Requests.get(route, query, options);
     };
+    /**
+     * Adding up the number of event states.
+     *
+     * @see [Live Increment State By - BingeWave](https://developers.bingewave.com/docs/eventcommands#stateincrement)
+     *
+     * @param event_id The id of the live event.
+     * @param key The key that will be used for retrieving the data later.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.incrementStateBy = function (event_id, key, data, query, options) {
         var route = this.routeIncrementStateBy.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{key}', key);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Decreasing the number of event states.
+     *
+     * @see [Live Decrement State By - BingeWave](https://developers.bingewave.com/docs/eventcommands#statedecrement)
+     *
+     * @param event_id The id of the live event.
+     * @param key The key that will be used for retrieving the data later.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.decrementStateBy = function (event_id, key, data, query, options) {
         var route = this.routeDecrementStateBy.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{key}', key);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Creates group for live event.
+     *
+     * @see [Live Create Groups - BingeWave](https://developers.bingewave.com/docs/groups#create)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.createGroup = function (event_id, data, query, options) {
         var route = this.routeCreateGroup.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Updates a group information information.
+     *
+     * @see [Live Update Groups - BingeWave](https://developers.bingewave.com/docs/groups#update)
+     *
+     * @param event_id The id of the live event.
+     * @param group_id The id of the group.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.updateGroup = function (event_id, group_id, data, query, options) {
         var route = this.routeUpdateGroup.route.replaceAll('{id}', event_id);
         route.replaceAll('{group_id}', group_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * List groups that is related to the organizer's account and access token.
+     *
+     * @see [Live List Groups - BingeWave](https://developers.bingewave.com/docs/groups#list)
+     *
+     * @param event_id The id of the live event.
+     * @param group_id The id of the group.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.listGroup = function (event_id, group_id, query, options) {
         var route = this.routeListGroup.route.replaceAll('{id}', event_id);
         route.replaceAll('{group_id}', group_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * View the information pertaining to a single group.
+     *
+     * @see [Live List Groups - BingeWave](https://developers.bingewave.com/docs/groups#view)
+     *
+     * @param event_id The id of the live event.
+     * @param group_id The id of the group.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.viewGroup = function (event_id, group_id, query, options) {
         var route = this.routeViewGroup.route.replaceAll('{id}', event_id);
         route.replaceAll('{group_id}', group_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Deletes a group from an event.
+     *
+     * @see [Live Delete Group - BingeWave](https://developers.bingewave.com/docs/groups#delete)
+     *
+     * @param event_id The id of the live event.
+     * @param group_id The id of the group.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.deleteGroup = function (event_id, group_id, data, query, options) {
         var route = this.routeDeleteGroup.route.replaceAll('{id}', event_id);
         route.replaceAll('{group_id}', group_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Register an attendee for either a free or paid event
+     *
+     * @see [Live Register Attendee - BingeWave](https://developers.bingewave.com/docs/attendees#register)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.registerAttendee = function (event_id, data, query, options) {
         var route = this.routeRegisterAttendee.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Lists tickets/RSVPs in relation to the event being addressesed.
+     *
+     * @see [Live List Tickets - BingeWave](https://developers.bingewave.com/docs/attendees#list)
+     *
+     * @param event_id The id of the live event.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.listTickets = function (event_id, query, options) {
         var route = this.routeListTickets.route.replaceAll('{id}', event_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Checks if a attendee has a valid ticket to the current event.
+     *
+     * @see [Live Has Ticket - BingeWave](https://developers.bingewave.com/docs/attendees#hasticket)
+     *
+     * @param event_id The id of the live event.
+     * @param account_id The id of account.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.hasTicket = function (event_id, account_id, query, options) {
         var route = this.routeHasTicket.route.replaceAll('{id}', event_id);
         route.replaceAll('{account_id}', account_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * View the current ticket's information.
+     *
+     * @see [Live View Ticket - BingeWave](https://developers.bingewave.com/docs/attendees#view)
+     *
+     * @param event_id The id of the live event.
+     * @param ticket_id Id of attendee ticket.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.viewTicket = function (event_id, ticket_id, query, options) {
         var route = this.routeViewTicket.route.replaceAll('{id}', event_id);
         route.replaceAll('{ticket_id}', ticket_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Issues a refund for a purchased ticket.
+     *
+     * @see [Live Refund Ticket - BingeWave](https://developers.bingewave.com/docs/attendees#refund)
+     *
+     * @param event_id The id of the live event.
+     * @param ticket_id Id of attendee ticket.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.refundTicket = function (event_id, ticket_id, data, query, options) {
         var route = this.routeRefundTicket.route.replaceAll('{id}', event_id);
         route.replaceAll('{ticket_id}', ticket_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Manually add user as an attendee to event.
+     *
+     * @see [Live Manually Add User - BingeWave](https://developers.bingewave.com/docs/attendees#addattendee)
+     *
+     * @param user_id Id of user.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.addUserToAttenndees = function (user_id, data, query, options) {
         var route = this.routeAddUser.route.replaceAll('{id}', user_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Manually remove user as an attendee to event.
+     *
+     * @see [Live Manually Remove User - BingeWave](https://developers.bingewave.com/docs/attendees#removeattendee)
+     *
+     * @param user_id Id of user.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.removeUserFromAttendees = function (user_id, data, query, options) {
         var route = this.routeRemoveUser.route.replaceAll('{id}', user_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Retrieves all the users who are participants of the live event.
+     *
+     * @see [Live Get Participants - BingeWave](https://developers.bingewave.com/docs/status#participants)
+     *
+     * @param event_id The id of the live event.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.getParticipants = function (event_id, query, options) {
         var route = this.routeGetParticipants.route.replaceAll('{id}', event_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * List all the users that are currently online.
+     *
+     * @see [Live Online Users - BingeWave](https://developers.bingewave.com/docs/status#onlineusers)
+     *
+     * @param event_id The id of the live event.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.onlineUsers = function (event_id, query, options) {
         var route = this.routeOnlineUsers.route.replaceAll('{id}', event_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Retrieves a user's status based on the user's id as well as the user's roles.
+     *
+     * @see [Live Get User Status - BingeWave](https://developers.bingewave.com/docs/status#getstatus)
+     *
+     * @param event_id The id of the live event.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.getUserStatus = function (event_id, query, options) {
         var route = this.routeGetUserStatus.route.replaceAll('{id}', event_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Makes a user a moderator of the current live event.
+     *
+     * @see [Live Make Moderator - BingeWave](https://developers.bingewave.com/docs/status#makemoderator)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.makeModerator = function (event_id, data, query, options) {
         var route = this.routeMakeModerator.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Removes a user as a moderator from the current live event.
+     *
+     * @see [Live Remove As Moderator - BingeWave](https://developers.bingewave.com/docs/status#removemoderator)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of user's message.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.removeAsModerator = function (event_id, message_id, data, query, options) {
         var route = this.routeRemoveAsModerator.route.replaceAll('{id}', event_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Makes a user a panelist of the current live event.
+     *
+     * @see [Live Make Panelist - BingeWave](https://developers.bingewave.com/docs/status#makepanelist)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.makePanelist = function (event_id, data, query, options) {
         var route = this.routeMakePanelist.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Removes a user as a panelist from the current live event.
+     *
+     * @see [Live Remove As Panelist - RBingeWave](https://developers.bingewave.com/docs/status#removepanelist)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of user's message.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.removePanelist = function (event_id, message_id, data, query, options) {
         var route = this.routeRemoveAsPanelist.route.replaceAll('{id}', event_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Set the user's role in the current live event as a participant.
+     *
+     * @see [Live Make Participant - BingeWave](https://developers.bingewave.com/docs/status#makeparticipant)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.makeParticipant = function (data, query, options) {
         return Requests.post(this.routeMakeParticipant.route, data, query, options);
     };
+    /**
+     * Removes the user's role as a participant from the current live event.
+     *
+     * @see [Live Remove Participant - BingeWave](https://developers.bingewave.com/docs/status#removeparticipant)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of user's message.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.removeParticipant = function (event_id, message_id, data, query, options) {
         var route = this.routeRemoveParticipant.route.replaceAll('{id}', event_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Blocks the user from participating in the current live event.
+     *
+     * @see [Live Block User - BingeWave](https://developers.bingewave.com/docs/status#blockuser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.blockUser = function (event_id, data, query, options) {
         var route = this.routeBlockUser.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Removes the block that prevents the user from participating in the current live event.
+     *
+     * @see [Live Unblock User - BingeWave](https://developers.bingewave.com/docs/status#unblockuser)
+     *
+     * @param event_id The id of the live event.
+     * @param message_id The id of user's message.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.unblockUser = function (event_id, message_id, data, query, options) {
         var route = this.routeUnblockUser.route.replaceAll('{id}', event_id);
         route = route.replaceAll('{subid}', message_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Turns the user's video on during a video call.
+     *
+     * @see [Live Turn On User's Video - BingeWave](https://developers.bingewave.com/docs/status#videoonuser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.turnOnUserVideo = function (event_id, data, query, options) {
         var route = this.routeTurnOnVideo.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Turns the user's video off during a video call.
+     *
+     * @see [Live Turn Off User's Video - BingeWave](https://developers.bingewave.com/docs/status#videooffuser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.turnOffUserVideo = function (event_id, data, query, options) {
         var route = this.routeTurnOffVideo.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Turns the user's audio on during a video call.
+     *
+     * @see [Live Unmute User's Audio - BingeWave](https://developers.bingewave.com/docs/status#unmuteaudiouser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.unmuteUserAduio = function (event_id, data, query, options) {
         var route = this.routeUnmuteUserAudio.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Turns the user's audio off during a video call.
+     *
+     * @see [Live Mute User's Audio - BingeWave](https://developers.bingewave.com/docs/status#muteaudiouser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.muteUserAduio = function (event_id, data, query, options) {
         var route = this.routeMuteUserAudio.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Share the user's desktop during a video call.
+     *
+     * @see [Live Share User's Desktop - BingeWave](https://developers.bingewave.com/docs/status#sharedesktopuser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.shareUserDesktop = function (event_id, data, query, options) {
         var route = this.routeShareUserDesktop.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Share the user's video during the call.
+     *
+     * @see [Live Share User's Video - BingeWave](https://developers.bingewave.com/docs/status#sharevideouser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.shareUserVideo = function (event_id, data, query, options) {
         var route = this.routeShareUserVideo.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * There is the ability to hide a users video from all participants except moderators.
+     *
+     * @see [Live Hide User's Video From All - BingeWave](https://developers.bingewave.com/docs/status#hidevideofromalluser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.hideUserVideo = function (event_id, data, query, options) {
         var route = this.routeHideUserVideoFromAll.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Add a user to the staging container.
+     *
+     * @see [Live Add User To Stage - BingeWave](https://developers.bingewave.com/docs/status#tostageuser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.addUserToStage = function (event_id, data, query, options) {
         var route = this.routeAddUserToStage.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Add a user to the audience container.
+     *
+     * @see [Live Add User To Audience - BingeWave](https://developers.bingewave.com/docs/status#toaudienceuser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.addUserToAudience = function (event_id, data, query, options) {
         var route = this.routeAddUserToAudience.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Will connect a user to the current video call programmatically.
+     *
+     * @see [Live Connect User - BingeWave](https://developers.bingewave.com/docs/status#connectuser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.connectUser = function (event_id, data, query, options) {
         var route = this.routeConnectUser.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Will disconnect a user from the current video call.
+     *
+     * @see [Live Disconnect User - BingeWave](https://developers.bingewave.com/docs/status#disconnectuser)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.disconnectUser = function (event_id, data, query, options) {
         var route = this.routeDisconnectUser.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Normally layouts are set for the entire class.
+     *
+     * @see [Live Set Personal Layout - BingeWave](https://developers.bingewave.com/docs/status#setpersonallayout)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.setPersonalLayout = function (event_id, data, query, options) {
         var route = this.routeSetPersonalLayout.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Change the users camera input to another video source.
+     *
+     * @see [Live Change Video Device - BingeWave](https://developers.bingewave.com/docs/status#videoinput)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.setVideoInputDevice = function (event_id, data, query, options) {
         var route = this.routeChangeVideoDevice.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Change the users camera input to another video source.
+     *
+     * @see [Live Change Audio Device - BingeWave](https://developers.bingewave.com/docs/status#audioinput)
+     *
+     * @param event_id The id of the live event.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Events.setAudioInputDevice = function (event_id, data, query, options) {
         var route = this.routeChangeAudioDevice.route.replaceAll('{id}', event_id);
         return Requests.post(route, data, query, options);
@@ -31390,49 +32131,187 @@ var Events = /** @class */ (function () {
 var Organizers = /** @class */ (function () {
     function Organizers() {
     }
+    /**
+     * Show a list organizer associated with the current JSON Web Token.
+     *
+     * @see [Organizers List - BingeWave](https://developers.bingewave.com/docs/organizers#list)
+     *
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.getOrganizers = function (query, options) {
         return Requests.get(this.routeListOrganizers.route, query);
     };
+    /**
+     * Creates an organizer account.
+     *
+     * @see [Organizers Create - BingeWave](https://developers.bingewave.com/docs/organizers#create)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.createOrganizer = function (data, query, options) {
         return Requests.post(this.routeCreateOrganizer.route, data, query, options);
     };
+    /**
+     * Update the information to an organizer account.
+     *
+     * @see [Organizers Update Organizer - BingeWave](https://developers.bingewave.com/docs/organizers#update)
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.updateOrganizer = function (organizer_id, data, query, options) {
         var route = this.routeUpdateOrganizer.route.replaceAll('{id}', organizer_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * View the information pertaining to a single organizer account.
+     *
+     * @see [Organizers View Organizer - BingeWave](https://developers.bingewave.com/docs/organizers#view)
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.viewOrganizer = function (organizer_id, query, options) {
         var route = this.routeViewOrganizer.route.replaceAll('{id}', organizer_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Deletes organizer account.
+     *
+     * @todo Needs documentation.
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.deleteOrganizer = function (organizer_id, data, query, options) {
         var route = this.routeDeleterOrganizer.route.replaceAll('{id}', organizer_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Set a user's role for how much access they will have on the platform.
+     *
+     * @see [Organizers Set Role - BingeWave](https://developers.bingewave.com/docs/organizersmanage#setuser)
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.setUserToRole = function (organizer_id, data, query, options) {
         var route = this.routeSetUserToRoleWithOganizer.route.replaceAll('{id}', organizer_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Removes an account from a role for the current organizer account.
+     *
+     * @see [Organizers Remove Account From Role - BingeWave](https://developers.bingewave.com/docs/organizersmanage#removeuser)
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.removeUserFromRole = function (organizer_id, data, query, options) {
         var route = this.routeRemoveUserFromRoleWithOganizer.route.replaceAll('{id}', organizer_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Creates subscription for organizer account.
+     *
+     * @todo Needs documentation.
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.createSubscription = function (organizer_id, data, query, options) {
         var route = this.routeCreateSubscription.route.replaceAll('{id}', organizer_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Retrieves subscription information from organizer account.
+     *
+     * @todo Needs documentation.
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.getSubscriptions = function (organizer_id, query, options) {
         var route = this.routeGetSubscriptions.route.replaceAll('{id}', organizer_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * View the information pertaining to subscription.
+     *
+     * @todo Needs documentation.
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param subscription_id The id of subscription.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.viewSubscription = function (organizer_id, subscription_id, query, options) {
         var route = this.routeSingleSubscription.route.replaceAll('{id}', organizer_id);
         route = route.replaceAll('{subid}', subscription_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Retrieves the information pertaining to current subscription.
+     *
+     * @todo Needs documentation.
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.getCurrentSubscription = function (organizer_id, query, options) {
         var route = this.routeCurrentSubscription.route.replaceAll('{id}', organizer_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Cancles subscription.
+     *
+     * @todo Needs documentation.
+     *
+     * @param organizer_id The id of the organizer account.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Organizers.cancelSubscription = function (organizer_id, data, query, options) {
         var route = this.routeCancelSubscription.route.replaceAll('{id}', organizer_id);
         return Requests.delete(route, data, query, options);
@@ -31491,55 +32370,208 @@ var Organizers = /** @class */ (function () {
 var Templates = /** @class */ (function () {
     function Templates() {
     }
+    /**
+     * Retrieves template data related to account.
+     *
+     * @see [Templates - BingeWave](https://developers.bingewave.com/docs/templates)
+     *
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.getTemplates = function (query, options) {
         return Requests.get(this.routeListTemplate.route, query);
     };
+    /**
+     * Create a template that can used for live events.
+     *
+     * @see [Templates Create Template - BingeWave](https://developers.bingewave.com/docs/templates#creates)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.createTemplate = function (data, query, options) {
         return Requests.post(this.routeCreateTemplate.route, data, query, options);
     };
+    /**
+     * View a single template that been created.
+     *
+     * @see [Templates View Template - BingeWave](https://developers.bingewave.com/docs/templates#view)
+     *
+     * @param template_id The id of the template.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.viewTemplate = function (template_id, query, options) {
         var route = this.routeViewTemplate.route.replaceAll('{id}', template_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * View a single template that been created.
+     *
+     * @see [Templates Update Template - BingeWave](https://developers.bingewave.com/docs/templates#update)
+     *
+     * @param template_id The id of the template.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.updateTemplate = function (template_id, data, query, options) {
         var route = this.routeUpdateTemplate.route.replaceAll('{id}', template_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * Updates design of template.
+     *
+     * @todo Needs documentation.
+     *
+     * @param template_id The id of the template.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.updateTemplateDesign = function (template_id, data, query, options) {
         var route = this.routeUpdateTemplateDesign.route.replaceAll('{id}', template_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * View a single template that been created.
+     *
+     * @see [Templates Delete Template - BingeWave](https://developers.bingewave.com/docs/templates#delete)
+     *
+     * @param template_id The id of the template.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.deleteTemplate = function (template_id, data, query, options) {
         var route = this.routeDeleteTemplate.route.replaceAll('{id}', template_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Retrieves data for widgets for templates.
+     *
+     * @see [Templates Widgets - BingeWave](https://developers.bingewave.com/docs/templatewidgets)
+     *
+     * @param template_id The id of the template.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.getWidgets = function (template_id, query, options) {
         var route = this.routeListWidgets.route.replaceAll('{id}', template_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Add a widget to the template and set which user roles will have access to the widget.
+     *
+     * @see [Templates Add Widgets - BingeWave](https://developers.bingewave.com/docs/templatewidgets#addwidget)
+     *
+     * @param template_id The id of the template.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.addWidget = function (template_id, data, query, options) {
         var route = this.routeAddWidget.route.replaceAll('{id}', template_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Update the settings for the current widget associated with the template.
+     *
+     * @see [Templates Update Widgets - BingeWave](https://developers.bingewave.com/docs/templatewidgets#updatewidget)
+     *
+     * @param template_id The id of the template.
+     * @param widget_id The id of widget.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.updateWidget = function (template_id, widget_id, data, query, options) {
         var route = this.routeUpdateWidget.route.replaceAll('{id}', template_id);
         route = route.replaceAll('{subid}', widget_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * Removes the widget from the template, and this will cause the widget to be removed from the screen.
+     *
+     * @see [Templates Remove Widgets - BingeWave](https://developers.bingewave.com/docs/templatewidgets#removewidget)
+     *
+     * @param template_id The id of the template.
+     * @param widget_id The id of widget.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.deleteWidget = function (template_id, widget_id, data, query, options) {
         var route = this.routeRemoveWidget.route.replaceAll('{id}', template_id);
         route = route.replaceAll('{subid}', widget_id);
         return Requests.delete(route, data, query, options);
     };
+    /**
+     * Sets position in the option selected
+     *
+     * @see [Templates Set Widget Position Options - BingeWave](https://developers.bingewave.com/docs/templatewidgets#setoptions)
+     *
+     * @param template_id The id of the template.
+     * @param option_id The id of option.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.setWidgetPositioningOption = function (template_id, option_id, data, query, options) {
         var route = this.routeSetOptionsWidget.route.replaceAll('{id}', template_id);
         route = route.replaceAll('{subid}', option_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Return a list of configured options for the current template.
+     *
+     * @see [Templates Get Widget Position Options - BingeWave](https://developers.bingewave.com/docs/templatewidgets#getoptions)
+     *
+     * @param template_id The id of the template.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.getWidgetPositioningOption = function (template_id, query, options) {
         var route = this.routeGetOptionsWidget.route.replaceAll('{id}', template_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Saves template for future events.
+     *
+     * @todo Needs documentation.
+     *
+     * @param template_id The id of the template.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Templates.saveEventToTemplate = function (template_id, data, query, options) {
         var route = this.routeSaveEventToTemplate.route.replaceAll('{id}', template_id);
         return Requests.post(route, data, query, options);
@@ -31638,20 +32670,76 @@ var Templates = /** @class */ (function () {
 var Widgets = /** @class */ (function () {
     function Widgets() {
     }
+    /**
+     * Create a new widget add-on that can be integrated with a live event.
+     *
+     * @see [Widget Create Widget - BingeWave](https://developers.bingewave.com/docs/widgets#create)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Widgets.createWidget = function (data, query, options) {
         return Requests.post(this.routeCreateWidget.route, data, query, options);
     };
+    /**
+     * View the information pertaining to a single widget.
+     *
+     * @see [Widget View Widget - BingeWave](https://developers.bingewave.com/docs/widgets#view)
+     *
+     * @param widget_id The id of widget.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Widgets.viewWidget = function (widget_id, query, options) {
         var route = this.routeViewWidget.route.replaceAll('{id}', widget_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Retrieves widgets.
+     *
+     * @see [Widget - BingeWave](https://developers.bingewave.com/docs/widgets)
+     *
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Widgets.getWidgets = function (query, options) {
         return Requests.get(this.routeListWidget.route, query, options);
     };
+    /**
+     * Updates a widget's information.
+     *
+     * @see [Widget Update Widget- BingeWave](https://developers.bingewave.com/docs/widgets#update)
+     *
+     * @param widget_id The id of widget.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Widgets.updateWidget = function (widget_id, data, query, options) {
         var route = this.routeUpdateWidget.route.replaceAll('{id}', widget_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * Deletes a widget's information.
+     *
+     * @see [Widget Delete Widget- BingeWave](https://developers.bingewave.com/docs/widgets#delete)
+     *
+     * @param widget_id The id of widget.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Widgets.deleteWidget = function (widget_id, data, query, options) {
         var route = this.routeDeleteWidget.route.replaceAll('{id}', widget_id);
         return Requests.delete(route, data, query, options);
@@ -31811,13 +32899,17 @@ var Videos = /** @class */ (function () {
     };
     /**
      * Sets the main image for the video/pre-recorded content.
-     * @param video_id
-     * @param filename
-     * @param file
-     * @param data
-     * @param query
-     * @param options
-     * @returns
+     *
+     * @see [Videos Upload Main Image - BingeWave](https://developers.bingewave.com/docs/videomedia#mainimage)
+     *
+     * @param video_id The id of the video this be the main video for.
+     * @param filename Name of file.
+     * @param file Either the location of the file OR a file object. If in a browser, pass in the file object. If executing on a node backend, pass in the location of the file on the server.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
      */
     Videos.uploadImage = function (video_id, filename, file, data, query, options) {
         var route = this.routeSetMainImage.route.replaceAll('{id}', video_id);
@@ -31865,29 +32957,113 @@ var Videos = /** @class */ (function () {
 var Products = /** @class */ (function () {
     function Products() {
     }
+    /**
+     * List products that are associated with an organizer account.
+     *
+     * @see [Products List Products - BingeWave](https://developers.bingewave.com/docs/products#list)
+     *
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Products.listProducts = function (query, options) {
         return Requests.get(this.routeListProducts.route, query, options);
     };
+    /**
+     * Create a product object.
+     *
+     * @see [Products List Products - BingeWave](https://developers.bingewave.com/docs/products#create)
+     *
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Products.createProducts = function (data, query, options) {
         return Requests.post(this.routeCreateProducts.route, data, query, options);
     };
+    /**
+     * View the information pertaining to a single product.
+     *
+     * @see [Products View Products - BingeWave](https://developers.bingewave.com/docs/products#view)
+     *
+     * @param product_id The id of the product.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Products.viewProducts = function (product_id, query, options) {
         var route = this.routeViewProducts.route.replaceAll('{id}', product_id);
         return Requests.get(route, query, options);
     };
+    /**
+     * Update a product's information.
+     *
+     * @see [Products Update Products - BingeWave](https://developers.bingewave.com/docs/products#update)
+     *
+     * @param product_id The id of the product.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Products.updateProducts = function (product_id, data, query, options) {
         var route = this.routeUpdateProducts.route.replaceAll('{id}', product_id);
         return Requests.put(route, data, query, options);
     };
+    /**
+     * Add images one at a time through this route.
+     *
+     * @see [Products Add Image - BingeWave](https://developers.bingewave.com/docs/productmedia#addimage)
+     *
+     * @param product_id The id of the product.
+     * @param file Data of file.
+     * @param filename Name of file.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Products.uploadImage = function (product_id, file, filename, data, query, options) {
         var route = this.routeAddImage.route.replaceAll('{id}', product_id);
         return Requests.upload(filename, file, route, data, query, options);
     };
+    /**
+     * Set the default image associated with the product.
+     *
+     * @see [Products Make Default Image - BingeWave](https://developers.bingewave.com/docs/productmedia#makedefaultimage)
+     *
+     * @param product_id The id of the product.
+     * @param image_id The id of the image.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Products.defaultImage = function (product_id, image_id, data, query, options) {
         var route = this.routeDefaultImage.route.replaceAll('{id}', product_id);
         route = this.routeDefaultImage.route.replaceAll('{subid}', image_id);
         return Requests.post(route, data, query, options);
     };
+    /**
+     * Delete an image associated with the product.
+     *
+     * @see [Products Delete Image - BingeWave](https://developers.bingewave.com/docs/productmedia#deleteimage)
+     *
+     * @param product_id The id of the product.
+     * @param image_id The id of the image.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
+     */
     Products.deleteImage = function (product_id, image_id, data, query, options) {
         var route = this.routeDeleteImage.route.replaceAll('{id}', product_id);
         route = this.routeDefaultImage.route.replaceAll('{subid}', image_id);

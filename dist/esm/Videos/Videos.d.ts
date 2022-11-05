@@ -108,13 +108,17 @@ declare class Videos {
     static uploadPreviewVideo(file: any, video_id: string, data: object, query?: object | null, options?: object | null): Promise<any>;
     /**
      * Sets the main image for the video/pre-recorded content.
-     * @param video_id
-     * @param filename
-     * @param file
-     * @param data
-     * @param query
-     * @param options
-     * @returns
+     *
+     * @see [Videos Upload Main Image - BingeWave](https://developers.bingewave.com/docs/videomedia#mainimage)
+     *
+     * @param video_id The id of the video this be the main video for.
+     * @param filename Name of file.
+     * @param file Either the location of the file OR a file object. If in a browser, pass in the file object. If executing on a node backend, pass in the location of the file on the server.
+     * @param data Data that will be passed in the body of the request.
+     * @param query Data that will be passed in the query string as a parameter.
+     * @param options Further options that can be used to modify the request.
+     *
+     * @returns Returns a promise from Axios.
      */
     static uploadImage(video_id: string, filename: string, file: any, data: object, query?: object | null, options?: object | null): Promise<any>;
 }
