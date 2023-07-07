@@ -1,5 +1,7 @@
 import AnyObject from "./Interfaces/AnyObject";
 declare class Requests {
+    private static axiosInstance;
+    private static getAxiosInstance;
     static post: (url: string, data: object, query?: object | null, options?: object | null) => Promise<any>;
     static put: (url: string, data: object, query?: object | null, options?: object | null) => Promise<any>;
     static get: (url: string, query?: object | null, options?: object | null) => Promise<any>;
@@ -10,6 +12,5 @@ declare class Requests {
     private static _uploadChunks;
     private static makeid;
     private static toQueryString;
-    private static sleep;
 }
 export default Requests;

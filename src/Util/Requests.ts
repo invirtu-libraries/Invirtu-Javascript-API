@@ -1,214 +1,176 @@
 import FormData from 'isomorphic-form-data';
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import Config from "../Config/Config";
 import AnyObject from "./Interfaces/AnyObject";
 import RequestTypes from "./RequestTypes";
-import { Buffer } from 'buffer'
+import { Buffer } from 'buffer';
 
-const blobFromSync = async (file : string | File | Blob): Promise<Blob | File> => {
+const blobFromSync = async (file: string | File | Blob): Promise<Blob | File> => {
   if (!file) {
-    throw new Error('Passed "file" cannot be empty!')
+    throw new Error('Passed "file" cannot be empty!');
   }
   if (typeof file === 'string') {
     const res = await import('fetch-blob/from');
-    return res.blobFromSync(file)
+    return res.blobFromSync(file);
   }
   if (file instanceof File || file instanceof Blob) {
-    return file
+    return file;
   }
-  throw new Error('Passed "file" is not a valid File object!')
+  throw new Error('Passed "file" is not a valid File object!');
 }
 
-  class Requests {
+class Requests {
+  private static axiosInstance: AxiosInstance;
 
-    public static post = (url :string, data : object, query? : object | null, options? : object | null) : Promise<any> => {
-        return this._sendRequest(url, RequestTypes.POST, data, query, options);
-    }
-
-    public static put = (url :string, data : object, query? : object | null, options? : object | null) : Promise<any> => {
-        return this._sendRequest(url, RequestTypes.PUT, data, query, options);
-    }
-
-    public static get = (url :string, query? : object | null, options? : object | null) : Promise<any> => {
-        return this._sendRequest(url, RequestTypes.GET, null, query, options);
-    }
-
-    public static delete = (url :string, data? : object | null, query? : object | null, options? : object | null) : Promise<any> => {
-        return this._sendRequest(url, RequestTypes.DELETE, data, query, options);
-    }
-
-    public static upload = (filename: string, file: any, url :string, data : AnyObject, query? : object | null, options? : object | null) : Promise<any> => {
-
-        const formData = new FormData();
-
-        formData.append(filename, file)
-
-        Object.keys(data).forEach(key => formData.append(key, data[key]));
-
-        return this._sendRequest(url, RequestTypes.POST, formData, query, options);
-    }
-
-    public static uploadChunks = (id: string, file_location: string, url :string, data : AnyObject, query? : object | null, options? : object | null) : Promise<any> => {
-
-        return this._uploadChunks(url, id, file_location);
-
-        //const formData = new FormData();
-
-        //Object.keys(data).forEach(key => formData.append(key, data[key]));
-        //return this._sendRequest(url, RequestTypes.POST, formData, query, options);
-
-    }
-
-    private static _sendRequest = (url : string, method : string, data? : object | null, query? : object | null, options? : object | null) : Promise<any> => {
-
-        let queryParameters = '';
-
-        if(query){
-            queryParameters = "?" + this.toQueryString(query);
+  private static getAxiosInstance(): AxiosInstance {
+    if (!this.axiosInstance) {
+      this.axiosInstance = axios.create({
+        baseURL: 'https://bw.bingewave.com',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + Config.getAuthToken(),
         }
+      });
+    }
+    return this.axiosInstance;
+  }
 
-        let body = null;
+  public static post = (url: string, data: object, query?: object | null, options?: object | null): Promise<any> => {
+    return Requests._sendRequest(url, RequestTypes.POST, data, query, options);
+  }
 
-        if(data instanceof FormData && data !== null) {
-            body = data;
-        } else if(typeof data === 'object' && data !== null) {
-            body = data;
-        }
+  public static put = (url: string, data: object, query?: object | null, options?: object | null): Promise<any> => {
+    return Requests._sendRequest(url, RequestTypes.PUT, data, query, options);
+  }
 
-        let route = "https://bw.bingewave.com" + url + queryParameters;
+  public static get = (url: string, query?: object | null, options?: object | null): Promise<any> => {
+    return Requests._sendRequest(url, RequestTypes.GET, null, query, options);
+  }
 
-        let config : AnyObject = {
-            // learn more about this API here: https://graphql-pokemon2.vercel.app/
-            //method: method,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + Config.getAuthToken(),
-            }
-        }
+  public static delete = (url: string, data?: object | null, query?: object | null, options?: object | null): Promise<any> => {
+    return Requests._sendRequest(url, RequestTypes.DELETE, data, query, options);
+  }
 
-        //axios.defaults.headers.common['Authorization']  = 'Bearer ' + Config.getAuthToken();
-        //axios.defaults.headers.common['Accept'] = 'application/json';
-        //axios.defaults.headers.common['Content-Type'] = 'application/json';
+  public static upload = (filename: string, file: any, url: string, data: AnyObject, query?: object | null, options?: object | null): Promise<any> => {
+    const formData = new FormData();
+    formData.append(filename, file);
+    Object.keys(data).forEach(key => formData.append(key, data[key]));
+    return Requests._sendRequest(url, RequestTypes.POST, formData, query, options);
+  }
 
-        if(body){
-            config['body'] = body;
-        }
+  public static uploadChunks = (id: string, file_location: string, url: string, data: AnyObject, query?: object | null, options?: object | null): Promise<any> => {
+    return Requests._uploadChunks(url, id, file_location);
+  }
 
-        let response = axios({
-            method: method,
-            url: route,
-            data: body,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + Config.getAuthToken(),
-            }
-        });
-
-        return response;
+  private static _sendRequest = (url: string, method: string, data?: object | null, query?: object | null, options?: object | null): Promise<any> => {
+    let queryParameters = '';
+    if (query) {
+      queryParameters = "?" + Requests.toQueryString(query);
     }
 
-    private static _uploadChunks = async (url : string, id: string, file_location : string) => {
-
-        url = "https://bw.bingewave.com" + url;
-
-        //Jibri Auth Token
-        let token = Config.getAuthToken();
-
-        //Access Config
-        const config = {
-            maxContentLength: Infinity,
-            maxBodyLength: Infinity,
-        };
-
-        const file = await blobFromSync(file_location);
-
-        //Chunk Size- 10 MB
-        const chunkSize = 10000000;
-
-        const totalSize = file.size;
-
-        let chunk_id = id + '-' + this.makeid(5);
-
-        let final_response  = null;
-
-        let formHeaders = null;
-
-        for (let start = 0; start < file.size; start += chunkSize) {
-
-            const chunk = file.slice(start, start + chunkSize)
-
-            const form = new FormData();
-
-            let buffered = Buffer.from(await chunk.arrayBuffer());
-
-            let upload_id = this.makeid(10);
-
-            form.append('file', buffered, upload_id);
-            form.append('chunked', 1);
-            form.append('chunked_id', chunk_id);
-            form.append('totalSize', totalSize);
-
-            if(form.getHeaders){
-                formHeaders = form.getHeaders();
-            }
-
-            let headers = {
-                "Authorization": `Bearer ${token}`,
-                ...formHeaders,
-            }
-
-            // @ts-ignore
-            config.headers = headers;
-
-            try {
-                let result = await axios.post(url, form, config).then(function (response) {
-
-                    if (response.data && response.data.status == "success") {
-                        return response.data;
-                    } else if (response.data && response.data.status == "failure" ) {
-                        return response.data;
-                    }
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
-
-                final_response = result;
-
-            } catch (error) {
-                console.error(error)
-            }
-        }
-
-        return final_response;
+    let body = null;
+    if (data instanceof FormData && data !== null) {
+      body = data;
+    } else if (typeof data === 'object' && data !== null) {
+      body = data;
     }
 
-    private static makeid(length : number) {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
-        }
-        return result;
-    }
+    const route = url + queryParameters;
+    const axiosInstance = Requests.getAxiosInstance();
 
-    private static toQueryString = (obj : AnyObject) => {
-        var str = [];
-        for (var p in obj)
-          if (obj.hasOwnProperty(p)) {
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-          }
-        return str.join("&");
+    let response = axiosInstance({
+      method: method,
+      url: route,
+      data: body
+    });
+
+    return response;
+  }
+
+  private static _uploadChunks = async (url: string, id: string, file_location: string) => {
+    url = "https://bw.bingewave.com" + url;
+    //Jibri Auth Token
+    let token = Config.getAuthToken();
+
+    //Access Config
+    const config = {
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+    };
+
+    const file = await blobFromSync(file_location);
+
+    //Chunk Size- 10 MB
+    const chunkSize = 10000000;
+    const totalSize = file.size;
+
+    let chunk_id = id + '-' + Requests.makeid(5);
+    let final_response = null;
+    let formHeaders = null;
+
+    for (let start = 0; start < file.size; start += chunkSize) {
+      const chunk = file.slice(start, start + chunkSize)
+      const form = new FormData();
+
+      let buffered = Buffer.from(await chunk.arrayBuffer());
+      let upload_id = Requests.makeid(10);
+      
+      form.append('file', buffered, upload_id);
+      form.append('chunked', 1);
+      form.append('chunked_id', chunk_id);
+      form.append('totalSize', totalSize);
+
+      if (form.getHeaders) {
+        formHeaders = form.getHeaders();
       }
 
-      private static sleep(ms : number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+      let headers = {
+        "Authorization": `Bearer ${token}`,
+        ...formHeaders,
+      }
 
+      config.headers = headers;
+
+      try {
+        let result = await axios.post(url, form, config).then(function (response) {
+          if (response.data && response.data.status == "success") {
+            return response.data;
+          } else if (response.data && response.data.status == "failure") {
+            return response.data;
+          }
+        })
+          .catch(function (error) {
+            console.error(error);
+          });
+
+        final_response = result;
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    return final_response;
+  }
+
+  private static makeid(length: number) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() *
+        charactersLength));
+    }
+    return result;
+  }
+
+  private static toQueryString = (obj: AnyObject) => {
+    var str = [];
+    for (var p in obj)
+      if (obj.hasOwnProperty(p)) {
+        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+      }
+    return str.join("&");
+  }
 }
 
 export default Requests;

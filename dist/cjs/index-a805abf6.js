@@ -16058,7 +16058,7 @@ var blobFromSync = function (file) { return __awaiter(void 0, void 0, void 0, fu
                     throw new Error('Passed "file" cannot be empty!');
                 }
                 if (!(typeof file === 'string')) return [3 /*break*/, 2];
-                return [4 /*yield*/, Promise.resolve().then(function () { return require('./from-bfeff3ba.js'); })];
+                return [4 /*yield*/, Promise.resolve().then(function () { return require('./from-2f328fe3.js'); })];
             case 1:
                 res = _a.sent();
                 return [2 /*return*/, res.blobFromSync(file)];
@@ -16073,6 +16073,19 @@ var blobFromSync = function (file) { return __awaiter(void 0, void 0, void 0, fu
 var Requests = /** @class */ (function () {
     function Requests() {
     }
+    Requests.getAxiosInstance = function () {
+        if (!this.axiosInstance) {
+            this.axiosInstance = axios.create({
+                baseURL: 'https://bw.bingewave.com',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + Config.getAuthToken(),
+                }
+            });
+        }
+        return this.axiosInstance;
+    };
     Requests.makeid = function (length) {
         var result = '';
         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -16083,39 +16096,33 @@ var Requests = /** @class */ (function () {
         }
         return result;
     };
-    Requests.sleep = function (ms) {
-        return new Promise(function (resolve) { return setTimeout(resolve, ms); });
-    };
     var _a;
     _a = Requests;
     Requests.post = function (url, data, query, options) {
-        return _a._sendRequest(url, RequestTypes.POST, data, query, options);
+        return Requests._sendRequest(url, RequestTypes.POST, data, query, options);
     };
     Requests.put = function (url, data, query, options) {
-        return _a._sendRequest(url, RequestTypes.PUT, data, query, options);
+        return Requests._sendRequest(url, RequestTypes.PUT, data, query, options);
     };
     Requests.get = function (url, query, options) {
-        return _a._sendRequest(url, RequestTypes.GET, null, query, options);
+        return Requests._sendRequest(url, RequestTypes.GET, null, query, options);
     };
     Requests.delete = function (url, data, query, options) {
-        return _a._sendRequest(url, RequestTypes.DELETE, data, query, options);
+        return Requests._sendRequest(url, RequestTypes.DELETE, data, query, options);
     };
     Requests.upload = function (filename, file, url, data, query, options) {
         var formData = new FormData$2();
         formData.append(filename, file);
         Object.keys(data).forEach(function (key) { return formData.append(key, data[key]); });
-        return _a._sendRequest(url, RequestTypes.POST, formData, query, options);
+        return Requests._sendRequest(url, RequestTypes.POST, formData, query, options);
     };
     Requests.uploadChunks = function (id, file_location, url, data, query, options) {
-        return _a._uploadChunks(url, id, file_location);
-        //const formData = new FormData();
-        //Object.keys(data).forEach(key => formData.append(key, data[key]));
-        //return this._sendRequest(url, RequestTypes.POST, formData, query, options);
+        return Requests._uploadChunks(url, id, file_location);
     };
     Requests._sendRequest = function (url, method, data, query, options) {
         var queryParameters = '';
         if (query) {
-            queryParameters = "?" + _a.toQueryString(query);
+            queryParameters = "?" + Requests.toQueryString(query);
         }
         var body = null;
         if (data instanceof FormData$2 && data !== null) {
@@ -16124,25 +16131,12 @@ var Requests = /** @class */ (function () {
         else if (typeof data === 'object' && data !== null) {
             body = data;
         }
-        var route = "https://bw.bingewave.com" + url + queryParameters;
-        ({
-            // learn more about this API here: https://graphql-pokemon2.vercel.app/
-            //method: method,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + Config.getAuthToken(),
-            }
-        });
-        var response = axios({
+        var route = url + queryParameters;
+        var axiosInstance = Requests.getAxiosInstance();
+        var response = axiosInstance({
             method: method,
             url: route,
-            data: body,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + Config.getAuthToken(),
-            }
+            data: body
         });
         return response;
     };
@@ -16162,7 +16156,7 @@ var Requests = /** @class */ (function () {
                     file = _d.sent();
                     chunkSize = 10000000;
                     totalSize = file.size;
-                    chunk_id = id + '-' + this.makeid(5);
+                    chunk_id = id + '-' + Requests.makeid(5);
                     final_response = null;
                     formHeaders = null;
                     start = 0;
@@ -16175,7 +16169,7 @@ var Requests = /** @class */ (function () {
                     return [4 /*yield*/, chunk.arrayBuffer()];
                 case 3:
                     buffered = _c.apply(_b, [_d.sent()]);
-                    upload_id = this.makeid(10);
+                    upload_id = Requests.makeid(10);
                     form.append('file', buffered, upload_id);
                     form.append('chunked', 1);
                     form.append('chunked_id', chunk_id);
@@ -16184,7 +16178,6 @@ var Requests = /** @class */ (function () {
                         formHeaders = form.getHeaders();
                     }
                     headers = __assign({ "Authorization": "Bearer ".concat(token) }, formHeaders);
-                    // @ts-ignore
                     config.headers = headers;
                     _d.label = 4;
                 case 4:
@@ -18912,4 +18905,4 @@ exports.Templates = Templates;
 exports.Videos = Videos;
 exports.Widgets = Widgets;
 exports.commonjsGlobal = commonjsGlobal;
-//# sourceMappingURL=index-3ec98c0a.js.map
+//# sourceMappingURL=index-a805abf6.js.map
